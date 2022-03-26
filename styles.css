@@ -28,7 +28,6 @@ main {
   gap: 3rem;
   background: linear-gradient(90deg, #1c1c1c, #272727);
 }
-
 .controls__container {
   display: flex;
   align-items: center;
@@ -54,17 +53,14 @@ main {
   justify-content: center;
   transform: translateY(0.125rem);
 }
-
 .button:active {
   background-color: #292933;
   border-bottom: 0.125rem solid #191929;
 }
-
 .button--selected {
   background-color: #5500ee;
   border-color: #330099;
 }
-
 .button__icon {
   width: 1rem;
   height: 1rem;
@@ -81,7 +77,6 @@ main {
   background-color: #191919;
   background: linear-gradient(#111, #151515);
 }
-
 .drawing-area::after {
   content: "Click around in this area!";
   position: absolute;
@@ -109,15 +104,12 @@ main {
   position: absolute;
   opacity: 0.6;
 }
-
 .shape:hover {
   opacity: 0.8;
 }
-
 .shape--selected {
   opacity: 1;
 }
-
 .shape--selected:hover {
   opacity: 1;
 }
