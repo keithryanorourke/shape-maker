@@ -72,7 +72,7 @@ const addNewBox = (e) => {
   if(shapesArray[selectedIndex]) {
     shapesArray[selectedIndex].classList.remove('shape--selected')
   }
-  shapesArray[currentIndex].className = `shape ${formOfShape}`
+  shapesArray[currentIndex].className = `shape shape--${formOfShape}`
   shapesArray[currentIndex].style.border= `${sizeToString(borderThickness, 'px')} solid ${colorArray[colorIndex]}` 
   draggableArea.appendChild(shapesArray[currentIndex])
   selectedIndex = currentIndex
@@ -167,14 +167,14 @@ const shapeButtonListener = (e, key) => {
   formOfShape = key
   preview.className = `preview ${key}`
   if(mode === 'select' && shapesArray[selectedIndex]) {
-    shapesArray[selectedIndex].className = `shape ${key}`
+    shapesArray[selectedIndex].className = `shape shape--${key}`
   }
   shapeButtonsList.forEach(buttonName => {
     if(buttonName !== key) {
-      shapeButtons[buttonName].className = 'button'
+      shapeButtons[buttonName].className = `button`
     }
     else {
-      shapeButtons[buttonName].className = "button button--selected"
+      shapeButtons[buttonName].className = `button button--selected`
     }
   })
 }

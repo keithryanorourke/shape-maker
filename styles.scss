@@ -60,16 +60,33 @@ main {
     border-bottom: 0.125rem solid #191929;
   }
   
+  &__icon {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid #eee;
+
+    &--parallelogram {
+      transform: skew(20deg)
+    }
+    
+    &--parallelogram_right {
+      transform: skew(-20deg)
+    }
+    
+    &--circle {
+      border-radius: 50%;
+    }
+    
+    &--diamond {
+      transform: rotate(45deg);
+    }
+  }
+
   &--selected {
     background-color: #5500ee;
     border-color: #330099;
   }
   
-  &__icon {
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid #eee;
-  }
 }
 
 
@@ -91,21 +108,7 @@ main {
   }
 }
 
-.parallelogram {
-  transform: skew(20deg)
-}
 
-.parallelogram_right {
-  transform: skew(-20deg)
-}
-
-.circle {
-  border-radius: 50%;
-}
-
-.diamond {
-  transform: rotate(45deg);
-}
 
 .shape {
   position: absolute;
@@ -120,8 +123,23 @@ main {
   &--selected:hover {
     opacity: 1;
   }
-}
 
+  &--parallelogram {
+    transform: skew(20deg)
+  }
+  
+  &--parallelogram_right {
+    transform: skew(-20deg)
+  }
+  
+  &--circle {
+    border-radius: 50%;
+  }
+  
+  &--diamond {
+    transform: rotate(45deg);
+  }
+}
 
 .preview {
   transition: transform 0.25s, border 0.25s;
