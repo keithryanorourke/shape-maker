@@ -27,17 +27,18 @@ main {
   justify-content: center;
   gap: 3rem;
   background: linear-gradient(90deg, #1c1c1c, #272727);
+  
+  &__container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    border-radius: 0.75rem;
+    background-color: #393939;
+    height: 3rem;
+  }
 }
 
-.controls__container {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0 1rem;
-  border-radius: 0.75rem;
-  background-color: #393939;
-  height: 3rem;
-}
 
 .button {
   color: inherit;
@@ -53,23 +54,41 @@ main {
   align-items: center;
   justify-content: center;
   transform: translateY(0.125rem);
+  
+  &:active {
+    background-color: #292933;
+    border-bottom: 0.125rem solid #191929;
+  }
+  
+  &__icon {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid #eee;
+
+    &--parallelogram {
+      transform: skew(20deg)
+    }
+    
+    &--parallelogram_right {
+      transform: skew(-20deg)
+    }
+    
+    &--circle {
+      border-radius: 50%;
+    }
+    
+    &--diamond {
+      transform: rotate(45deg);
+    }
+  }
+
+  &--selected {
+    background-color: #5500ee;
+    border-color: #330099;
+  }
+  
 }
 
-.button:active {
-  background-color: #292933;
-  border-bottom: 0.125rem solid #191929;
-}
-
-.button--selected {
-  background-color: #5500ee;
-  border-color: #330099;
-}
-
-.button__icon {
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid #eee;
-}
 
 .drawing-area {
   position: relative;
@@ -80,43 +99,46 @@ main {
   border: 2px solid black;
   background-color: #191919;
   background: linear-gradient( #111, #151515);
-}
-.drawing-area::after {
-  content: "Click around in this area!";
-  position: absolute;
-  background-color: #000;
-  z-index: 1000;
-}
-
-.parallelogram {
-  transform: skew(20deg)
+  
+  &::after {
+    content: "Click around in this area!";
+    position: absolute;
+    background-color: #000;
+    z-index: 1000;
+  }
 }
 
-.parallelogram_right {
-  transform: skew(-20deg)
-}
 
-.circle {
-  border-radius: 50%;
-}
-
-.diamond {
-  transform: rotate(45deg);
-}
 
 .shape {
   position: absolute;
   opacity: 0.6;
-}
-.shape:hover {
-  opacity: 0.8;
-}
+  &:hover {
+    opacity: 0.8;
+  }
+  
+  &--selected {
+    opacity: 1;
+  }
+  &--selected:hover {
+    opacity: 1;
+  }
 
-.shape--selected {
-  opacity: 1;
-}
-.shape--selected:hover {
-  opacity: 1;
+  &--parallelogram {
+    transform: skew(20deg)
+  }
+  
+  &--parallelogram_right {
+    transform: skew(-20deg)
+  }
+  
+  &--circle {
+    border-radius: 50%;
+  }
+  
+  &--diamond {
+    transform: rotate(45deg);
+  }
 }
 
 .preview {

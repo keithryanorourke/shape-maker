@@ -1,6 +1,5 @@
 const shapesArray=[];
 let shapeIndex = 0;
-let colorIndex = 0;
 let selectedIndex = 0;
 let borderThickness = 5;
 let startingPosition={};
@@ -9,28 +8,40 @@ let releaseBorderButton = false;
 let mode = 'draw';
 let formOfShape = 'square';
 const colorArray = ['#FF0000', '#00FF00', '#8844FF', '#FFFF00', '#00BBFF', '#FF00FF']
-const shapeButtons = {}
+let colorIndex = 0;
 
-// Grab element where user can draw and buttons
-const draggableArea = document.querySelector('.drawing-area')
-const borderPlus = document.getElementById('borderPlus')
-const borderMinus = document.getElementById('borderMinus')
+// Grab all shape buttons and add them as properties to shapeButtons object
+const shapeButtons = {}
 shapeButtons.square = document.getElementById('square-button')
 shapeButtons.circle = document.getElementById('circle-button')
 shapeButtons.parallelogram = document.getElementById('parallelogram-left-button')
 shapeButtons.parallelogram_right = document.getElementById('parallelogram-right-button')
 shapeButtons.diamond = document.getElementById('diamond-button')
+
+// Grab the rest of the UI buttons
+const borderPlus = document.getElementById('borderPlus')
+const borderMinus = document.getElementById('borderMinus')
+const preview = document.getElementById('preview')
 const drawButton = document.getElementById('draw')
 const selectButton = document.getElementById('select')
 
+const draggableArea = document.querySelector('.drawing-area')
 
-const preview = document.getElementById('preview')
-
-// Function to stringify measurements and append unit
+/**
+ * 
+ * @param {number} integer 
+ * @param {string} unit 
+ * @returns {string} string with measurement and unit
+ */
 const sizeToString = (integer, unit) => {
   return integer.toString() + unit
 }
 
+/**
+ * 
+ * @param {string} string 
+ * @returns {number} measurement from provided string as number
+ */
 const stringToSize = (string) => {
   const size = string.split('p')[0]
   return Number(size)
@@ -48,6 +59,7 @@ const sortShapesBySize = (arr) => {
   })
 }
 
+// Take in clicked object and make it the selected object, update classList to reflect this change.
 const shapeClickHandler = (e, currentIndex) => {
     if(mode !== 'select') {
       return
@@ -59,36 +71,38 @@ const shapeClickHandler = (e, currentIndex) => {
     preview.style.borderWidth = sizeToString(borderThickness, 'px')
 }
 
+// onClick for draggable area, creates new div and appends to draggable area.
 const addNewBox = (e) => {
   if(mode !== 'draw' || newShape) {
     return
   }
-//   newShape remains true as long as we are creating/resizing a shape
+  // newShape remains true as long as we are creating/resizing a shape
   newShape = true;
   const currentIndex = shapeIndex;
-//   Store new shape inside of array, this makes it easier to add editing functionality later on
+  // Store new shape inside of array, this makes it easier to add editing functionality later on
   shapesArray.push(document.createElement('div'))
   shapesArray[currentIndex].addEventListener('click', (e) => shapeClickHandler(e, currentIndex))
   if(shapesArray[selectedIndex]) {
     shapesArray[selectedIndex].classList.remove('shape--selected')
   }
-  shapesArray[currentIndex].className = `shape ${formOfShape}`
+  shapesArray[currentIndex].className = `shape shape--${formOfShape}`
   shapesArray[currentIndex].style.border= `${sizeToString(borderThickness, 'px')} solid ${colorArray[colorIndex]}` 
   draggableArea.appendChild(shapesArray[currentIndex])
   selectedIndex = currentIndex
   
-//   Set initial values for position of shape
+  // Set initial values for position of shape
   startingPosition={x: e.clientX, y: e.clientY}
   shapesArray[currentIndex].style.top=sizeToString(startingPosition.y - 80, 'px')
   shapesArray[currentIndex].style.left=sizeToString(startingPosition.x, 'px')
 }
 
+// mousemove handler for draggable area, updates size of new shape div until mouse is released.
 const sizeNewShape = (e) => {
   if (newShape && mode === 'draw') {
-//     Resize shape based on cursor movement
+    // Resize shape based on cursor movement
     shapesArray[shapeIndex].style.width=sizeToString(Math.abs(e.clientX-startingPosition.x), 'px')
     shapesArray[shapeIndex].style.height=sizeToString(Math.abs(e.clientY-startingPosition.y), 'px')
-//     Handling for cases where user drags up or left
+    // Handling for cases where user drags up or left
     if(e.clientX < startingPosition.x) {
       shapesArray[shapeIndex].style.left=e.clientX.toString() +'px'
     }
@@ -98,19 +112,20 @@ const sizeNewShape = (e) => {
   }
 }
 
+// mouseup handler for draggable area, disables mousemove for draggable area and updated index for colorsArray and shapesArray
 const releaseNewShape = (e) => {
   if(mode !== 'draw') {
     return
   }
   newShape = false
   sortShapesBySize(shapesArray)
-//   Cycle through color array and change preview color
+  // Cycle through color array and change preview color
   colorIndex++
   if(colorIndex >= colorArray.length) {
     colorIndex=0;
   }
   preview.style.borderColor = colorArray[colorIndex]
-//   Move on to next shape
+  // Move on to next shape
   shapeIndex++
 }
 
@@ -155,6 +170,7 @@ borderMinus.addEventListener('mousedown', () => {
 borderPlus.addEventListener('mouseup', () => {
   releaseBorderButton = true;
 })
+
 borderMinus.addEventListener('mouseup', () => {
   releaseBorderButton = true;
 })
@@ -167,14 +183,14 @@ const shapeButtonListener = (e, key) => {
   formOfShape = key
   preview.className = `preview ${key}`
   if(mode === 'select' && shapesArray[selectedIndex]) {
-    shapesArray[selectedIndex].className = `shape ${key}`
+    shapesArray[selectedIndex].className = `shape shape--${key}`
   }
   shapeButtonsList.forEach(buttonName => {
     if(buttonName !== key) {
-      shapeButtons[buttonName].className = 'button'
+      shapeButtons[buttonName].className = `button`
     }
     else {
-      shapeButtons[buttonName].className = "button button--selected"
+      shapeButtons[buttonName].className = `button button--selected`
     }
   })
 }

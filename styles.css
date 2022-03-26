@@ -28,7 +28,6 @@ main {
   gap: 3rem;
   background: linear-gradient(90deg, #1c1c1c, #272727);
 }
-
 .controls__container {
   display: flex;
   align-items: center;
@@ -54,21 +53,30 @@ main {
   justify-content: center;
   transform: translateY(0.125rem);
 }
-
 .button:active {
   background-color: #292933;
   border-bottom: 0.125rem solid #191929;
 }
-
-.button--selected {
-  background-color: #5500ee;
-  border-color: #330099;
-}
-
 .button__icon {
   width: 1rem;
   height: 1rem;
   border: 2px solid #eee;
+}
+.button__icon--parallelogram {
+  transform: skew(20deg);
+}
+.button__icon--parallelogram_right {
+  transform: skew(-20deg);
+}
+.button__icon--circle {
+  border-radius: 50%;
+}
+.button__icon--diamond {
+  transform: rotate(45deg);
+}
+.button--selected {
+  background-color: #5500ee;
+  border-color: #330099;
 }
 
 .drawing-area {
@@ -81,7 +89,6 @@ main {
   background-color: #191919;
   background: linear-gradient(#111, #151515);
 }
-
 .drawing-area::after {
   content: "Click around in this area!";
   position: absolute;
@@ -89,37 +96,30 @@ main {
   z-index: 1000;
 }
 
-.parallelogram {
-  transform: skew(20deg);
-}
-
-.parallelogram_right {
-  transform: skew(-20deg);
-}
-
-.circle {
-  border-radius: 50%;
-}
-
-.diamond {
-  transform: rotate(45deg);
-}
-
 .shape {
   position: absolute;
   opacity: 0.6;
 }
-
 .shape:hover {
   opacity: 0.8;
 }
-
 .shape--selected {
   opacity: 1;
 }
-
 .shape--selected:hover {
   opacity: 1;
+}
+.shape--parallelogram {
+  transform: skew(20deg);
+}
+.shape--parallelogram_right {
+  transform: skew(-20deg);
+}
+.shape--circle {
+  border-radius: 50%;
+}
+.shape--diamond {
+  transform: rotate(45deg);
 }
 
 .preview {
