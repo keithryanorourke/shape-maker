@@ -18,6 +18,10 @@ class ElementState {
     this.currentListeners = []
   }
 
+  /**
+   * 
+   * @param {boolean} reset 
+   */
   removePrevListeners(reset) {
     this.currentListeners.forEach(listener => {
       this.element.removeEventListener(listener.eventType, listener.handler)
