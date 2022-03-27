@@ -86,7 +86,7 @@ const drawMode = () => {
   drawButton.className = "button button--selected"
   selectButton.className = "button"
   if(shapesArray[selectedIndex]) {
-    shapesArray[selectedIndex].classList.remove('shape--selected')
+    shapesArray[selectedIndex].element.classList.remove('shape--selected')
   }
 }
 
@@ -97,7 +97,7 @@ const selectMode = () => {
   drawButton.className = "button"
   selectButton.className = "button button--selected"
   if(shapesArray[selectedIndex]) {
-    shapesArray[selectedIndex].classList.add('shape--selected')
+    shapesArray[selectedIndex].element.classList.add('shape--selected')
   }
 }
 
