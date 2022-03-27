@@ -17,6 +17,28 @@ class ElementState {
     this.element = element
     this.currentListeners = []
   }
+
+  removePrevListeners(reset) {
+    this.currentListeners.forEach(listener => {
+      this.element.removeEventListener(listener.eventType, listener.handler)
+    })
+    if(reset) {
+      this.currentListeners = []
+    }
+  }
+  
+  /**
+   * 
+   * @param {object[]} listenersToAdd 
+   */
+  applyModeListeners(listenersToAdd) {
+    // Remove all previous listeners for fresh start
+    this.removePrevListeners(false)
+    listenersToAdd.forEach(listener => {
+      this.element.addEventListener(listener.eventType, listener.handler)
+    })
+    this.currentListeners = listenersToAdd
+  }
 }
 
 const documentState = new ElementState(document)
@@ -35,7 +57,6 @@ const sortShapesBySize = (arr) => {
 
 // Take in clicked object and make it the selected object, update classList to reflect this change.
 const shapeClickHandler = (e) => {
-  console.log('Clicked shape')
   const currentIndex = shapesArray.indexOf(shapesArray.find(shape => shape.element === e.target))
   const shapeEl = shapesArray[currentIndex].element
   shapesArray[selectedIndex].element.classList.remove('shape--selected')

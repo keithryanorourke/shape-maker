@@ -79,13 +79,11 @@ borderMinus.addEventListener('mouseup', () => {
 })
 
 const drawMode = () => {
-  removePrevListeners(documentState, true)
+  documentState.removePrevListeners(documentState)
   shapesArray.forEach(shape => {
-    console.log(shape.currentListeners)
-    removePrevListeners(shape, true)
-    console.log(shape.currentListeners)
+    shape.removePrevListeners(true)
   })
-  applyModeListeners(draggableAreaState, 
+  draggableAreaState.applyModeListeners( 
     [{eventType: 'mousedown', handler: createNewShape}, {eventType: 'mouseup', handler: releaseNewShape}]
   )
   mode = 'draw'
@@ -98,10 +96,10 @@ const drawMode = () => {
 
 const selectMode = () => {
   shapesArray.forEach(shape => {
-    applyModeListeners(shape, [{eventType: 'click', handler: shapeClickHandler}])
+    shape.applyModeListeners([{eventType: 'click', handler: shapeClickHandler}])
   })
-  removePrevListeners(draggableAreaState, true)
-  applyModeListeners(documentState, [{eventType: 'keydown', handler: deleteShape}])
+  draggableAreaState.removePrevListeners(true)
+  documentState.applyModeListeners([{eventType: 'keydown', handler: deleteShape}])
   mode = 'select'
   drawButton.className = "button"
   selectButton.className = "button button--selected"
