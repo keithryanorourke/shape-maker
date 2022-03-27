@@ -78,20 +78,34 @@ borderMinus.addEventListener('mouseup', () => {
   releaseBorderButton = true;
 })
 
-drawButton.addEventListener('click', () => {
+const drawMode = () => {
+  applyModeListeners(draggableAreaState, 
+    [{eventType: 'mousedown', handler: createNewShape}, {eventType: 'mouseup', handler: releaseNewShape}]
+  )
   mode = 'draw'
   drawButton.className = "button button--selected"
   selectButton.className = "button"
   if(shapesArray[selectedIndex]) {
     shapesArray[selectedIndex].classList.remove('shape--selected')
   }
-})
+}
 
-selectButton.addEventListener('click', () => {
+const selectMode = () => {
+  removePrevListeners(draggableAreaState, true)
+  applyModeListeners(documentState, [{eventType: 'keydown', handler: deleteShape}])
   mode = 'select'
   drawButton.className = "button"
   selectButton.className = "button button--selected"
   if(shapesArray[selectedIndex]) {
     shapesArray[selectedIndex].classList.add('shape--selected')
   }
-})
+}
+
+// Call function to apply drawMode on page load
+drawMode()
+
+drawButton.addEventListener('click', drawMode)
+
+// Draw mode events
+
+selectButton.addEventListener('click', selectMode)

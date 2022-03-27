@@ -12,10 +12,19 @@ let colorIndex = 0;
 
 const draggableArea = document.querySelector('.drawing-area')
 
+class ElementState {
+  constructor(element) {
+    this.element = element
+    this.currentListeners = []
+  }
+}
+
+const documentState = new ElementState(document)
+const draggableAreaState = new ElementState(draggableArea)
+
 // Takes array of shape objects and makes a sorted copy to apply sorted z-index
 const sortShapesBySize = (arr) => {
   let arrayToSort = [...arr]
-  arrayToSort = arrayToSort.filter(shape => shape)
   arrayToSort.sort((shapeA, shapeB) => {
     return (stringToSize(shapeB.style.width) + stringToSize(shapeB.style.height)) - (stringToSize(shapeA.style.width) + stringToSize(shapeA.style.height))
   })
@@ -37,11 +46,12 @@ const shapeClickHandler = (e, currentIndex) => {
 }
 
 // onClick for draggable area, creates new div and appends to draggable area.
-const addNewBox = (e) => {
+const createNewShape = (e) => {
   if(mode !== 'draw' || newShape) {
     return
   }
   // newShape remains true as long as we are creating/resizing a shape
+  draggableArea.addEventListener('mousemove', sizeNewShape)
   newShape = true;
   const currentIndex = shapeIndex;
   // Store new shape inside of array, this makes it easier to add editing functionality later on
@@ -82,6 +92,7 @@ const releaseNewShape = (e) => {
   if(mode !== 'draw') {
     return
   }
+  draggableArea.removeEventListener('mousemove', sizeNewShape)
   newShape = false
   sortShapesBySize(shapesArray)
   // Cycle through color array and change preview color
@@ -94,10 +105,15 @@ const releaseNewShape = (e) => {
   shapeIndex++
 }
 
-// Drawing area events
-draggableArea.addEventListener('mousedown', addNewBox)
-draggableArea.addEventListener('mousemove', sizeNewShape)
-draggableArea.addEventListener('mouseup', releaseNewShape)
+// Delete key listener which deletes selected shape and calls functio to re-index event listeners
+const deleteShape = (e) => {
+  console.log("Fuck")
+  if((e.key==='Delete' || e.key==='Backspace') && mode==='select' && shapesArray[selectedIndex]) {
+    draggableArea.removeChild(shapesArray[selectedIndex])
+    shapesArray.splice(selectedIndex, 1)
+    reIndexShapes()
+  }
+}
 
 // Function to re-index event listeners on all elements of shapesArray and reset all related index variables
 const reIndexShapes = () => {
@@ -109,11 +125,8 @@ const reIndexShapes = () => {
   })
 }
 
-// Delete key listener which deletes selected shape and calls functio to re-index event listeners
-document.addEventListener('keydown', (e) => {
-  if((e.key==='Delete' || e.key==='Backspace') && mode==='select' && shapesArray[selectedIndex]) {
-    draggableArea.removeChild(shapesArray[selectedIndex])
-    shapesArray.splice(selectedIndex, 1)
-    reIndexShapes()
-  }
-})
+
+
+// document.addEventListener('keydown', (e) => {
+  
+// })
