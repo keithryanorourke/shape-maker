@@ -1,6 +1,6 @@
 const removePrevListeners = (target, reset) => {
   target.currentListeners.forEach(listener => {
-    target.element.removeEventListener(listener.eventType, listener.Handler)
+    target.element.removeEventListener(listener.eventType, listener.handler)
   })
   if(reset) {
     target.currentListeners = []
@@ -18,5 +18,5 @@ const applyModeListeners = (target, listenersToAdd) => {
   listenersToAdd.forEach(listener => {
     target.element.addEventListener(listener.eventType, listener.handler)
   })
-  target.removeListeners = listenersToAdd
+  target.currentListeners = listenersToAdd
 }

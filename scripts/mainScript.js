@@ -34,23 +34,19 @@ const sortShapesBySize = (arr) => {
 }
 
 // Take in clicked object and make it the selected object, update classList to reflect this change.
-const shapeClickHandler = (e, currentIndex) => {
-  const shapeEl = shapesArray[selectedIndex].element
-    if(mode !== 'select') {
-      return
-    }
-    shapeEl.classList.remove('shape--selected')
-    selectedIndex = currentIndex
-    shapeEl.classList.add('shape--selected')
-    borderThickness = stringToSize(shapeEl.style.borderWidth)
-    preview.style.borderWidth = sizeToString(borderThickness, 'px')
+const shapeClickHandler = (e) => {
+  console.log('Clicked shape')
+  const currentIndex = shapesArray.indexOf(shapesArray.find(shape => shape.element === e.target))
+  const shapeEl = shapesArray[currentIndex].element
+  shapesArray[selectedIndex].element.classList.remove('shape--selected')
+  selectedIndex = currentIndex
+  shapeEl.classList.add('shape--selected')
+  borderThickness = stringToSize(shapeEl.style.borderWidth)
+  preview.style.borderWidth = sizeToString(borderThickness, 'px')
 }
 
 // onClick for draggable area, creates new div and appends to draggable area.
 const createNewShape = (e) => {
-  if(mode !== 'draw' || newShape) {
-    return
-  }
   // newShape remains true as long as we are creating/resizing a shape
   draggableArea.addEventListener('mousemove', sizeNewShape)
   newShape = true;
@@ -59,10 +55,6 @@ const createNewShape = (e) => {
   const newShapeState = new ElementState(document.createElement('div'))
   shapesArray.push(newShapeState)
   const newShapeEl = shapesArray[currentIndex].element
-  newShapeEl.addEventListener('click', (e) => shapeClickHandler(e, currentIndex))
-  if(shapesArray[selectedIndex]) {
-    shapesArray[selectedIndex].element.classList.remove('shape--selected')
-  }
   newShapeEl.className = `shape shape--${formOfShape}`
   newShapeEl.style.border= `${sizeToString(borderThickness, 'px')} solid ${colorArray[colorIndex]}` 
   draggableArea.appendChild(newShapeEl)
@@ -111,7 +103,7 @@ const releaseNewShape = (e) => {
 
 // Delete key listener which deletes selected shape and calls functio to re-index event listeners
 const deleteShape = (e) => {
-  if((e.key==='Delete' || e.key==='Backspace') && mode==='select' && shapesArray[selectedIndex]) {
+  if((e.key==='Delete' || e.key==='Backspace') && shapesArray[selectedIndex]) {
     draggableArea.removeChild(shapesArray[selectedIndex].element)
     shapesArray.splice(selectedIndex, 1)
     reIndexShapes()
@@ -121,9 +113,9 @@ const deleteShape = (e) => {
 // Function to re-index event listeners on all elements of shapesArray and reset all related index variables
 const reIndexShapes = () => {
   shapeIndex = shapesArray.length
+  if (!shapeIndex) {
+    return
+  }
   selectedIndex = shapeIndex-1
   shapesArray[selectedIndex].element.classList.add('shape--selected')
-  shapesArray.forEach((shape, index) => {
-    shape.element.addEventListener('click', (e) => shapeClickHandler(e, index))
-  })
 }

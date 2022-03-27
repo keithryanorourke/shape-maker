@@ -11,9 +11,9 @@ shapeButtonNames.forEach(name => {
 
 const shapeButtonListener = (e, name) => {
   formOfShape = name
-  preview.className = `preview ${name}`
+  preview.className = `preview preview--${name}`
   if(mode === 'select' && shapesArray[selectedIndex]) {
-    shapesArray[selectedIndex].className = `shape shape--${name}`
+    shapesArray[selectedIndex].element.className = `shape shape--${name}`
   }
   shapeButtonNames.forEach(buttonName => {
     const currentButton = shapeButtons.find(button => button.shapeName === buttonName)
@@ -48,7 +48,7 @@ borderPlus.addEventListener('mousedown', () => {
       borderThickness++
       preview.style.borderWidth = sizeToString(borderThickness, 'px')
       if(mode==='select') {
-        shapesArray[selectedIndex].style.borderWidth = sizeToString(borderThickness, 'px')
+        shapesArray[selectedIndex].element.style.borderWidth = sizeToString(borderThickness, 'px')
       }
     }
   }, 300)
@@ -64,7 +64,7 @@ borderMinus.addEventListener('mousedown', () => {
     borderThickness--
     preview.style.borderWidth = sizeToString(borderThickness, 'px')
     if(mode==='select' && shapesArray[selectedIndex]) {
-      shapesArray[selectedIndex].style.borderWidth = sizeToString(borderThickness, 'px')
+      shapesArray[selectedIndex].element.style.borderWidth = sizeToString(borderThickness, 'px')
     }
   }
   }, 300)
@@ -79,6 +79,12 @@ borderMinus.addEventListener('mouseup', () => {
 })
 
 const drawMode = () => {
+  removePrevListeners(documentState, true)
+  shapesArray.forEach(shape => {
+    console.log(shape.currentListeners)
+    removePrevListeners(shape, true)
+    console.log(shape.currentListeners)
+  })
   applyModeListeners(draggableAreaState, 
     [{eventType: 'mousedown', handler: createNewShape}, {eventType: 'mouseup', handler: releaseNewShape}]
   )
@@ -91,6 +97,9 @@ const drawMode = () => {
 }
 
 const selectMode = () => {
+  shapesArray.forEach(shape => {
+    applyModeListeners(shape, [{eventType: 'click', handler: shapeClickHandler}])
+  })
   removePrevListeners(draggableAreaState, true)
   applyModeListeners(documentState, [{eventType: 'keydown', handler: deleteShape}])
   mode = 'select'

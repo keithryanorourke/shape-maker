@@ -136,4 +136,16 @@ main {
   height: 1.75rem;
   border: 5px solid #FF0000;
   opacity: 0.6;
+}
+.preview--parallelogram-left {
+  transform: skew(20deg);
+}
+.preview--parallelogram-right {
+  transform: skew(-20deg);
+}
+.preview--circle {
+  border-radius: 50%;
+}
+.preview--diamond {
+  transform: rotate(45deg);
 }/*# sourceMappingURL=styles.css.map */
