@@ -1,10 +1,4 @@
-// Grab all shape buttons and add them as properties to shapeButtons object
-// const shapeButtons = {}
-// shapeButtons.square = document.getElementById('square-button')
-// shapeButtons.circle = document.getElementById('circle-button')
-// shapeButtons.parallelogram = document.getElementById('parallelogram-left-button')
-// shapeButtons.parallelogram_right = document.getElementById('parallelogram-right-button')
-// shapeButtons.diamond = document.getElementById('diamond-button')
+// Grab all shape buttons and add eventlisteners
 const shapeButtonNames = ['square', 'circle', 'parallelogram-left', 'parallelogram-right', 'diamond']
 const shapeButtons = []
 shapeButtonNames.forEach(name => {
@@ -14,8 +8,6 @@ shapeButtonNames.forEach(name => {
   }
   shapeButtons.push(newButton)
 })
-
-console.log(shapeButtons)
 
 const shapeButtonListener = (e, name) => {
   formOfShape = name
@@ -85,31 +77,6 @@ borderPlus.addEventListener('mouseup', () => {
 borderMinus.addEventListener('mouseup', () => {
   releaseBorderButton = true;
 })
-
-// Make list of names of shape buttons
-// const shapeButtonsList = Object.keys(shapeButtons)
-
-// Universal shape button onClick listener
-// const shapeButtonListener = (e, key) => {
-//   formOfShape = key
-//   preview.className = `preview ${key}`
-//   if(mode === 'select' && shapesArray[selectedIndex]) {
-//     shapesArray[selectedIndex].className = `shape shape--${key}`
-//   }
-//   shapeButtonsList.forEach(buttonName => {
-//     if(buttonName !== key) {
-//       shapeButtons[buttonName].className = `button`
-//     }
-//     else {
-//       shapeButtons[buttonName].className = `button button--selected`
-//     }
-//   })
-// }
-
-// Loop through array of shape button names and add listener to each
-// shapeButtonsList.forEach(key => {
-//   shapeButtons[key].addEventListener('click', (e) => shapeButtonListener(e, key))
-// })
 
 drawButton.addEventListener('click', () => {
   mode = 'draw'
