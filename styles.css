@@ -1,8 +1,12 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html, body, main {
+html,
+body,
+main {
   padding: 0;
   margin: 0;
   width: 100%;
@@ -134,7 +138,7 @@ main {
   transition: transform 0.25s, border 0.25s;
   width: 1.75rem;
   height: 1.75rem;
-  border: 5px solid #FF0000;
+  border: 5px solid #ff0000;
   opacity: 0.6;
 }
 .preview--parallelogram-left {

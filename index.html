@@ -1,43 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto Mono">
-  <link rel="stylesheet" href="styles.css">
-  <script src="./scripts/conversionFunctions.js" defer></script>
-  <script src="./scripts/mainScript.js" defer></script>
-  <script src="./scripts/uiScript.js" defer></script>
-  <title>Shape Maker</title>
-</head>
-  <body>
-    <main>
-      <div class="controls">
-        <div class="controls__container">
-          <span class="controls__heading">BORDER THICKNESS:</span>
-          <button id="borderPlus" class="button">+</button>
-          <button id="borderMinus" class="button">-</button>
-        </div>
-        <div class="controls__container">
-          <span class="controls__heading">SHAPE:</span>
-          <button id="square" class="button button--selected"><div class="button__icon button__icon--square"></div></button>
-          <button id="circle" class="button"><div class="button__icon button__icon--circle"></div></button>
-          <button id="parallelogram-left" class="button"><div class="button__icon button__icon--parallelogram-left"></div></button>
-          <button id="parallelogram-right" class="button"><div class="button__icon button__icon--parallelogram-right"></div></button>
-          <button id="diamond" class="button"><div class="button__icon button__icon--diamond"></div></button>
-        </div>
-        <div class="controls__container">
-          <span class="controls__heading">PREVIEW:</span>
-          <div id="preview" class="preview square"></div>
-        </div>
-        <div class="controls__container">
-          <span class="controls__heading">MODE:</span>
-          <button id="draw" class="button button--selected">Drw</button>
-          <button id="select" class="button">Sel</button>
-        </div>
-      </div>
-      <span class="drawing-area"></span>
-    </main>
-  </body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Roboto Mono"
+		/>
+		<link rel="stylesheet" href="styles.css" />
+		<script src="./scripts/conversionFunctions.js" defer></script>
+		<script src="./scripts/mainScript.js" defer></script>
+		<script src="./scripts/uiScript.js" defer></script>
+		<title>Shape Maker</title>
+	</head>
+	<body>
+		<main>
+			<div class="controls">
+				<div class="controls__container">
+					<span class="controls__heading">BORDER THICKNESS:</span>
+					<button id="borderPlus" class="button">+</button>
+					<button id="borderMinus" class="button">-</button>
+				</div>
+				<div class="controls__container">
+					<span class="controls__heading">SHAPE:</span>
+					<button id="square" class="button button--selected">
+						<div class="button__icon button__icon--square"></div>
+					</button>
+					<button id="circle" class="button">
+						<div class="button__icon button__icon--circle"></div>
+					</button>
+					<button id="parallelogram-left" class="button">
+						<div
+							class="button__icon button__icon--parallelogram-left"
+						></div>
+					</button>
+					<button id="parallelogram-right" class="button">
+						<div
+							class="button__icon button__icon--parallelogram-right"
+						></div>
+					</button>
+					<button id="diamond" class="button">
+						<div class="button__icon button__icon--diamond"></div>
+					</button>
+				</div>
+				<div class="controls__container">
+					<span class="controls__heading">PREVIEW:</span>
+					<div id="preview" class="preview square"></div>
+				</div>
+				<div class="controls__container">
+					<span class="controls__heading">MODE:</span>
+					<button id="draw" class="button button--selected">
+						Drw
+					</button>
+					<button id="select" class="button">Sel</button>
+				</div>
+			</div>
+			<span class="drawing-area"></span>
+		</main>
+	</body>
 </html>
