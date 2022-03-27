@@ -4,7 +4,7 @@
  * @param {string} unit 
  * @returns {string} string with measurement and unit
  */
- const sizeToString = (integer, unit) => {
+const sizeToString = (integer, unit) => {
   return integer.toString() + unit
 }
 

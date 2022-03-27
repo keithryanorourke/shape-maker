@@ -51,15 +51,15 @@ const createNewShape = (e) => {
   draggableArea.addEventListener('mousemove', sizeNewShape)
   newShape = true;
   const currentIndex = shapeIndex;
-  // Store new shape inside of array, this makes it easier to add editing functionality later on
+  // Create new DOM element and ElementState object for said array
   const newShapeState = new ElementState(document.createElement('div'))
   shapesArray.push(newShapeState)
   const newShapeEl = shapesArray[currentIndex].element
+  // Add necessary classes and styles to new DOM element and print it on the page
   newShapeEl.className = `shape shape--${formOfShape}`
-  newShapeEl.style.border= `${sizeToString(borderThickness, 'px')} solid ${colorArray[colorIndex]}` 
+  newShapeEl.style.border = `${sizeToString(borderThickness, 'px')} solid ${colorArray[colorIndex]}` 
   draggableArea.appendChild(newShapeEl)
-  selectedIndex = currentIndex
-  
+  selectedIndex = currentIndex  
   // Set initial values for position of shape
   startingPosition={x: e.clientX, y: e.clientY}
   newShapeEl.style.top=sizeToString(startingPosition.y - 80, 'px')
