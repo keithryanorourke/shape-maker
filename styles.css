@@ -37,6 +37,14 @@ main {
   background-color: #393939;
   height: 3rem;
 }
+.controls__heading {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .controls__heading {
+    display: inline;
+  }
+}
 
 .button {
   color: inherit;
@@ -62,10 +70,10 @@ main {
   height: 1rem;
   border: 2px solid #eee;
 }
-.button__icon--parallelogram {
+.button__icon--parallelogram-left {
   transform: skew(20deg);
 }
-.button__icon--parallelogram_right {
+.button__icon--parallelogram-right {
   transform: skew(-20deg);
 }
 .button__icon--circle {
@@ -109,10 +117,10 @@ main {
 .shape--selected:hover {
   opacity: 1;
 }
-.shape--parallelogram {
+.shape--parallelogram-left {
   transform: skew(20deg);
 }
-.shape--parallelogram_right {
+.shape--parallelogram-right {
   transform: skew(-20deg);
 }
 .shape--circle {

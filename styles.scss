@@ -37,6 +37,13 @@ main {
     background-color: #393939;
     height: 3rem;
   }
+
+  &__heading {
+    display: none;
+    @media (min-width: 1280px) {
+      display: inline;
+    }
+  }
 }
 
 
@@ -65,11 +72,11 @@ main {
     height: 1rem;
     border: 2px solid #eee;
 
-    &--parallelogram {
+    &--parallelogram-left {
       transform: skew(20deg)
     }
     
-    &--parallelogram_right {
+    &--parallelogram-right {
       transform: skew(-20deg)
     }
     
@@ -88,7 +95,6 @@ main {
   }
   
 }
-
 
 .drawing-area {
   position: relative;
@@ -124,11 +130,11 @@ main {
     opacity: 1;
   }
 
-  &--parallelogram {
+  &--parallelogram-left {
     transform: skew(20deg)
   }
   
-  &--parallelogram_right {
+  &--parallelogram-right {
     transform: skew(-20deg)
   }
   
