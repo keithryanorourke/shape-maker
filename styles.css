@@ -1,8 +1,12 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html, body, main {
+html,
+body,
+main {
   padding: 0;
   margin: 0;
   width: 100%;
@@ -37,6 +41,14 @@ main {
   background-color: #393939;
   height: 3rem;
 }
+.controls__heading {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .controls__heading {
+    display: inline;
+  }
+}
 
 .button {
   color: inherit;
@@ -62,10 +74,10 @@ main {
   height: 1rem;
   border: 2px solid #eee;
 }
-.button__icon--parallelogram {
+.button__icon--parallelogram-left {
   transform: skew(20deg);
 }
-.button__icon--parallelogram_right {
+.button__icon--parallelogram-right {
   transform: skew(-20deg);
 }
 .button__icon--circle {
@@ -109,10 +121,10 @@ main {
 .shape--selected:hover {
   opacity: 1;
 }
-.shape--parallelogram {
+.shape--parallelogram-left {
   transform: skew(20deg);
 }
-.shape--parallelogram_right {
+.shape--parallelogram-right {
   transform: skew(-20deg);
 }
 .shape--circle {
@@ -126,6 +138,18 @@ main {
   transition: transform 0.25s, border 0.25s;
   width: 1.75rem;
   height: 1.75rem;
-  border: 5px solid #FF0000;
+  border: 5px solid #ff0000;
   opacity: 0.6;
+}
+.preview--parallelogram-left {
+  transform: skew(20deg);
+}
+.preview--parallelogram-right {
+  transform: skew(-20deg);
+}
+.preview--circle {
+  border-radius: 50%;
+}
+.preview--diamond {
+  transform: rotate(45deg);
 }/*# sourceMappingURL=styles.css.map */
