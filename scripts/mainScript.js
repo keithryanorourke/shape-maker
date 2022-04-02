@@ -42,6 +42,38 @@ class ElementState {
 	}
 
 	/**
+	 * 
+	 * @param {*} listener 
+	 * @returns {number} Error code 404 will be returned if listener is not registered, nothing will be returned if method was successful.
+	 */
+	removeListener(listener) {
+		const listenerIndex = this.currentListeners.indexOf(listener)
+		// Return error code if passed in listener is not registered with list
+		if (listenerIndex === -1) {
+			return 404
+		}
+		// Remove listener from DOM element and then update registered list in state
+		this.element.removeEventListener(
+			listener.eventType,
+			listener.handler
+		)
+		this.currentListeners.splice(listenerIndex, 1)
+	}
+
+	/**
+	 * 
+	 * @param {object} listener 
+	 * @returns Error code -1 will be returned if listener is already registered, nothing will be returned if method was successful.
+	 */
+	addListener(listener) {
+		// Return error code if listener already registered in list
+		if (this.currentListeners.includes(listener)) {
+			return -1
+		}
+		this.element.addEventListener(listener.eventType, listener.handler)
+	}
+
+	/**
 	 *
 	 * @param {object[]} listenersToAdd
 	 */
