@@ -1,3 +1,5 @@
+// Grab preview element
+const preview = document.getElementById("preview");
 // Grab all shape buttons and add eventlisteners
 const shapeButtonNames = [
 	"square",
@@ -42,9 +44,6 @@ shapeButtons.forEach((button) => {
 // Grab the rest of the UI buttons
 const borderPlus = document.getElementById("borderPlus");
 const borderMinus = document.getElementById("borderMinus");
-const preview = document.getElementById("preview");
-const drawButton = document.getElementById("draw");
-const selectButton = document.getElementById("select");
 
 // Button events
 borderPlus.addEventListener("mousedown", () => {
@@ -90,9 +89,9 @@ borderMinus.addEventListener("mouseup", () => {
 });
 
 const drawMode = () => {
-	documentListenerState.removePrevListeners(documentListenerState);
+	documentListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
-		shape.removePrevListeners(true);
+		shape.removePrevListeners();
 	});
 	draggableAreaListenerState.applyModeListeners([
 		{ eventType: "mousedown", handler: createNewShape },
@@ -112,7 +111,7 @@ const selectMode = () => {
 			{ eventType: "click", handler: shapeClickHandler },
 		]);
 	});
-	draggableAreaListenerState.removePrevListeners(true);
+	draggableAreaListenerState.removePrevListeners();
 	documentListenerState.applyModeListeners([
 		{ eventType: "keydown", handler: deleteShape },
 	]);
@@ -127,8 +126,8 @@ const selectMode = () => {
 // Call function to apply drawMode on page load
 drawMode();
 
+// Mode selection listeners
+const drawButton = document.getElementById("draw");
+const selectButton = document.getElementById("select");
 drawButton.addEventListener("click", drawMode);
-
-// Draw mode events
-
 selectButton.addEventListener("click", selectMode);

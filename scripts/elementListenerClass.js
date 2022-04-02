@@ -16,20 +16,14 @@ class ElementListenerState {
 		this.currentListeners = initialListeners || [];
 	}
 
-	/**
-	 *
-	 * @param {boolean} reset
-	 */
-	removePrevListeners(reset) {
+	removePrevListeners() {
 		this.currentListeners.forEach((listener) => {
 			this.element.removeEventListener(
 				listener.eventType,
 				listener.handler
 			);
 		});
-		if (reset) {
-			this.currentListeners = [];
-		}
+    this.currentListeners = [];
 	}
 
 	/**
@@ -83,7 +77,7 @@ class ElementListenerState {
 	 */
 	applyModeListeners(listenersToAdd) {
 		// Remove all previous listeners for fresh start
-		this.removePrevListeners(false);
+		this.removePrevListeners();
 		listenersToAdd.forEach((listener) => {
 			this.element.addEventListener(listener.eventType, listener.handler);
 		});
