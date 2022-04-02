@@ -112,15 +112,6 @@ main {
   position: absolute;
   opacity: 0.6;
 }
-.shape:hover {
-  opacity: 0.8;
-}
-.shape--selected {
-  opacity: 1;
-}
-.shape--selected:hover {
-  opacity: 1;
-}
 .shape--parallelogram-left {
   transform: skew(20deg);
 }
@@ -132,6 +123,15 @@ main {
 }
 .shape--diamond {
   transform: rotate(45deg);
+}
+.shape:hover {
+  opacity: 0.8;
+}
+.shape--selected {
+  opacity: 1;
+}
+.shape--selected:hover {
+  opacity: 1;
 }
 
 .preview {
