@@ -1,4 +1,4 @@
-@use './partials/mixins' as *;
+@use "./partials/mixins" as *;
 
 *,
 *::before,
@@ -107,7 +107,7 @@ main {
 	position: absolute;
 	opacity: 0.6;
 	@include shape-modifiers;
-	
+
 	&:hover {
 		opacity: 0.8;
 	}
@@ -118,7 +118,6 @@ main {
 	&--selected:hover {
 		opacity: 1;
 	}
-
 }
 
 .preview {

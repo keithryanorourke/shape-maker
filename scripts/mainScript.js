@@ -54,11 +54,16 @@ const shapeClickHandler = (e) => {
 // onClick for draggable area, creates new div and appends to draggable area. This function is unique to Draw mode.
 const createNewShape = (e) => {
 	// newShape remains true as long as we are creating/resizing a shape
-	draggableAreaListenerState.addListener({eventType: "mousemove", handler: sizeNewShape});
+	draggableAreaListenerState.addListener({
+		eventType: "mousemove",
+		handler: sizeNewShape,
+	});
 	newShape = true;
 	const currentIndex = shapeIndex;
 	// Create new DOM element and ElementState object for said array
-	const newShapeListenerState = new ElementListenerState(document.createElement("div"));
+	const newShapeListenerState = new ElementListenerState(
+		document.createElement("div")
+	);
 	shapesArray.push(newShapeListenerState);
 	const newShapeEl = shapesArray[currentIndex].element;
 	// Add necessary classes and styles to new DOM element and print it on the page
@@ -102,7 +107,10 @@ const releaseNewShape = (e) => {
 	if (mode !== "draw") {
 		return;
 	}
-	draggableAreaListenerState.removeListener({eventType: "mousemove", handler: sizeNewShape});
+	draggableAreaListenerState.removeListener({
+		eventType: "mousemove",
+		handler: sizeNewShape,
+	});
 	newShape = false;
 	sortShapesBySize(shapesArray);
 	// Cycle through color array and change preview color
