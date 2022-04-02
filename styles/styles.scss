@@ -1,3 +1,5 @@
+@use "./partials/mixins" as *;
+
 *,
 *::before,
 *::after {
@@ -74,22 +76,7 @@ main {
 		width: 1rem;
 		height: 1rem;
 		border: 2px solid #eee;
-
-		&--parallelogram-left {
-			transform: skew(20deg);
-		}
-
-		&--parallelogram-right {
-			transform: skew(-20deg);
-		}
-
-		&--circle {
-			border-radius: 50%;
-		}
-
-		&--diamond {
-			transform: rotate(45deg);
-		}
+		@include shape-modifiers;
 	}
 
 	&--selected {
@@ -119,6 +106,8 @@ main {
 .shape {
 	position: absolute;
 	opacity: 0.6;
+	@include shape-modifiers;
+
 	&:hover {
 		opacity: 0.8;
 	}
@@ -129,22 +118,6 @@ main {
 	&--selected:hover {
 		opacity: 1;
 	}
-
-	&--parallelogram-left {
-		transform: skew(20deg);
-	}
-
-	&--parallelogram-right {
-		transform: skew(-20deg);
-	}
-
-	&--circle {
-		border-radius: 50%;
-	}
-
-	&--diamond {
-		transform: rotate(45deg);
-	}
 }
 
 .preview {
@@ -153,20 +126,5 @@ main {
 	height: 1.75rem;
 	border: 5px solid #ff0000;
 	opacity: 0.6;
-
-	&--parallelogram-left {
-		transform: skew(20deg);
-	}
-
-	&--parallelogram-right {
-		transform: skew(-20deg);
-	}
-
-	&--circle {
-		border-radius: 50%;
-	}
-
-	&--diamond {
-		transform: rotate(45deg);
-	}
+	@include shape-modifiers;
 }

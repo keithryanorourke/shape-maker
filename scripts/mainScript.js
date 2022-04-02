@@ -19,44 +19,8 @@ let colorIndex = 0;
 
 const draggableArea = document.querySelector(".drawing-area");
 
-class ElementState {
-	constructor(element) {
-		this.element = element;
-		this.currentListeners = [];
-	}
-
-	/**
-	 *
-	 * @param {boolean} reset
-	 */
-	removePrevListeners(reset) {
-		this.currentListeners.forEach((listener) => {
-			this.element.removeEventListener(
-				listener.eventType,
-				listener.handler
-			);
-		});
-		if (reset) {
-			this.currentListeners = [];
-		}
-	}
-
-	/**
-	 *
-	 * @param {object[]} listenersToAdd
-	 */
-	applyModeListeners(listenersToAdd) {
-		// Remove all previous listeners for fresh start
-		this.removePrevListeners(false);
-		listenersToAdd.forEach((listener) => {
-			this.element.addEventListener(listener.eventType, listener.handler);
-		});
-		this.currentListeners = listenersToAdd;
-	}
-}
-
-const documentState = new ElementState(document);
-const draggableAreaState = new ElementState(draggableArea);
+const documentListenerState = new ElementListenerState(document);
+const draggableAreaListenerState = new ElementListenerState(draggableArea);
 
 // Takes array of shape objects and makes a sorted copy to apply sorted z-index
 const sortShapesBySize = (arr) => {
@@ -74,7 +38,7 @@ const sortShapesBySize = (arr) => {
 	});
 };
 
-// Take in clicked object and make it the selected object, update classList to reflect this change.
+// Take in clicked object and make it the selected object, update classList to reflect this change. This function is unique to select mode.
 const shapeClickHandler = (e) => {
 	const currentIndex = shapesArray.indexOf(
 		shapesArray.find((shape) => shape.element === e.target)
@@ -87,15 +51,20 @@ const shapeClickHandler = (e) => {
 	preview.style.borderWidth = sizeToString(borderThickness, "px");
 };
 
-// onClick for draggable area, creates new div and appends to draggable area.
+// onClick for draggable area, creates new div and appends to draggable area. This function is unique to Draw mode.
 const createNewShape = (e) => {
 	// newShape remains true as long as we are creating/resizing a shape
-	draggableArea.addEventListener("mousemove", sizeNewShape);
+	draggableAreaListenerState.addListener({
+		eventType: "mousemove",
+		handler: sizeNewShape,
+	});
 	newShape = true;
 	const currentIndex = shapeIndex;
 	// Create new DOM element and ElementState object for said array
-	const newShapeState = new ElementState(document.createElement("div"));
-	shapesArray.push(newShapeState);
+	const newShapeListenerState = new ElementListenerState(
+		document.createElement("div")
+	);
+	shapesArray.push(newShapeListenerState);
 	const newShapeEl = shapesArray[currentIndex].element;
 	// Add necessary classes and styles to new DOM element and print it on the page
 	newShapeEl.className = `shape shape--${formOfShape}`;
@@ -138,7 +107,10 @@ const releaseNewShape = (e) => {
 	if (mode !== "draw") {
 		return;
 	}
-	draggableArea.removeEventListener("mousemove", sizeNewShape);
+	draggableAreaListenerState.removeListener({
+		eventType: "mousemove",
+		handler: sizeNewShape,
+	});
 	newShape = false;
 	sortShapesBySize(shapesArray);
 	// Cycle through color array and change preview color

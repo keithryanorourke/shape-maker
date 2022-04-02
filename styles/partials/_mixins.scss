@@ -1,0 +1,17 @@
+@mixin shape-modifiers {
+	&--parallelogram-left {
+		transform: skew(20deg);
+	}
+
+	&--parallelogram-right {
+		transform: skew(-20deg);
+	}
+
+	&--circle {
+		border-radius: 50%;
+	}
+
+	&--diamond {
+		transform: rotate(45deg);
+	}
+}
