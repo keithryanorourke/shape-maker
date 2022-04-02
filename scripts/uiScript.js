@@ -90,11 +90,11 @@ borderMinus.addEventListener("mouseup", () => {
 });
 
 const drawMode = () => {
-	documentState.removePrevListeners(documentState);
+	documentListenerState.removePrevListeners(documentListenerState);
 	shapesArray.forEach((shape) => {
 		shape.removePrevListeners(true);
 	});
-	draggableAreaState.applyModeListeners([
+	draggableAreaListenerState.applyModeListeners([
 		{ eventType: "mousedown", handler: createNewShape },
 		{ eventType: "mouseup", handler: releaseNewShape },
 	]);
@@ -112,8 +112,8 @@ const selectMode = () => {
 			{ eventType: "click", handler: shapeClickHandler },
 		]);
 	});
-	draggableAreaState.removePrevListeners(true);
-	documentState.applyModeListeners([
+	draggableAreaListenerState.removePrevListeners(true);
+	documentListenerState.applyModeListeners([
 		{ eventType: "keydown", handler: deleteShape },
 	]);
 	mode = "select";
