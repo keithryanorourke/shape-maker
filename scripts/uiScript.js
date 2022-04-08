@@ -100,7 +100,12 @@ const setModeButtonClasses = (activeButton, otherButtons) => {
 	})
 }
 
+const setCursorIcon = (fileName) => {
+	draggableArea.style.cursor = `url(./assets/icons/${fileName}), auto`
+}
+
 const drawMode = () => {
+	setCursorIcon('pencil.svg');
 	documentListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
 		shape.removePrevListeners();
@@ -117,6 +122,7 @@ const drawMode = () => {
 };
 
 const selectMode = () => {
+	setCursorIcon('hand-index.svg');
 	draggableAreaListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
@@ -134,6 +140,7 @@ const selectMode = () => {
 };
 
 const moveMode = () => {
+	setCursorIcon('arrows-move.svg');
 	draggableAreaListenerState.removePrevListeners();
 	documentListenerState.removePrevListeners();
 	mode = "move";
