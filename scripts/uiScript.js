@@ -88,6 +88,10 @@ borderMinus.addEventListener("mouseup", () => {
 	releaseBorderButton = true;
 });
 
+// Mode selection buttons
+const drawButton = document.getElementById("draw");
+const selectButton = document.getElementById("select");
+
 const drawMode = () => {
 	documentListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
@@ -123,11 +127,9 @@ const selectMode = () => {
 	}
 };
 
-// Call function to apply drawMode on page load
-drawMode();
-
 // Mode selection listeners
-const drawButton = document.getElementById("draw");
-const selectButton = document.getElementById("select");
 drawButton.addEventListener("click", drawMode);
 selectButton.addEventListener("click", selectMode);
+
+// Call function to apply drawMode on page load
+drawMode();
