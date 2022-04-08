@@ -10,7 +10,7 @@
 		/>
 		<link rel="stylesheet" href="./styles/styles.css" />
 		<script src="./scripts/conversionFunctions.js" defer></script>
-		<script src="./scripts/elementListenerClass.js"></script>
+		<script src="./scripts/elementListenerClass.js" defer></script>
 		<script src="./scripts/mainScript.js" defer></script>
 		<script src="./scripts/uiScript.js" defer></script>
 		<title>Shape Maker</title>
@@ -52,9 +52,14 @@
 				<div class="controls__container">
 					<span class="controls__heading">MODE:</span>
 					<button id="draw" class="button button--selected">
-						Drw
+						<img src="./assets/icons/pencil.svg" alt="Pencil icon.">
 					</button>
-					<button id="select" class="button">Sel</button>
+					<button id="select" class="button">
+						<img src="./assets/icons/hand-index.svg" alt="Finger pointing icon">
+					</button>
+					<button id="move" class="button">
+						<img src="./assets/icons/arrows-move.svg" alt="4 arrows pointing away from center point.">
+					</button>
 				</div>
 			</div>
 			<span class="drawing-area"></span>
