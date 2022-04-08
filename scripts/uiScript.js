@@ -91,6 +91,14 @@ borderMinus.addEventListener("mouseup", () => {
 // Mode selection buttons
 const drawButton = document.getElementById("draw");
 const selectButton = document.getElementById("select");
+const moveButton = document.getElementById("move")
+
+const setModeButtonClasses = (activeButton, otherButtons) => {
+	activeButton.className = "button button--selected"
+	otherButtons.forEach(button => {
+		button.className = "button"
+	})
+}
 
 const drawMode = () => {
 	documentListenerState.removePrevListeners();
@@ -102,34 +110,40 @@ const drawMode = () => {
 		{ eventType: "mouseup", handler: releaseNewShape },
 	]);
 	mode = "draw";
-	drawButton.className = "button button--selected";
-	selectButton.className = "button";
+	setModeButtonClasses(drawButton, [selectButton, moveButton])
 	if (shapesArray[selectedIndex]) {
 		shapesArray[selectedIndex].element.classList.remove("shape--selected");
 	}
 };
 
 const selectMode = () => {
+	draggableAreaListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
 			{ eventType: "click", handler: shapeClickHandler },
 		]);
 	});
-	draggableAreaListenerState.removePrevListeners();
 	documentListenerState.applyModeListeners([
 		{ eventType: "keydown", handler: deleteShape },
 	]);
 	mode = "select";
-	drawButton.className = "button";
-	selectButton.className = "button button--selected";
+	setModeButtonClasses(selectButton, [drawButton, moveButton])
 	if (shapesArray[selectedIndex]) {
 		shapesArray[selectedIndex].element.classList.add("shape--selected");
 	}
 };
 
+const moveMode = () => {
+	draggableAreaListenerState.removePrevListeners();
+	documentListenerState.removePrevListeners();
+	mode = "move";
+	setModeButtonClasses(moveButton, [selectButton, drawButton]);
+}
+
 // Mode selection listeners
 drawButton.addEventListener("click", drawMode);
 selectButton.addEventListener("click", selectMode);
+moveButton.addEventListener("click", moveMode)
 
 // Call function to apply drawMode on page load
 drawMode();
