@@ -7,6 +7,10 @@ Born as a personal passion project, this has been incredibly fun to work on and 
 
 I hope you'll give ShapeMaker a try and enjoy the heck out of it!
 
+## Device Support
+
+ShapeMaker currently supports both mouse controls and touch controls! It is also a responsive application designed with a mobile-first approach! Landscape orientation is currently functional, though a better approach to UI layout for landscape is a future goal for this project.
+
 
 ## Tech Stack
 ![Logo](https://skillicons.dev/icons?i=html,css,scss,js)
