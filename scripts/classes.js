@@ -52,8 +52,9 @@ class ElementListenerState {
 		);
 		// Return error code if passed in listener is not registered with list
 		if (listenerIndex === -1) {
+			console.log(this.currentListeners)
 			console.warn(
-				"Listener to be removed is not currently registered in list! The listener cannot be removed."
+				`Listener to be removed is not currently registered in list! The listener cannot be removed. \n${listener.eventType}`
 			);
 			return 404;
 		}

@@ -106,7 +106,7 @@ const setCursorIcon = (fileName) => {
 
 const drawMode = () => {
 	setCursorIcon('pencil.svg');
-	documentListenerState.applyModeListeners([{ eventType: "mouseup", handler: releaseNewShape }]);
+	draggableAreaListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
 		shape.removePrevListeners();
 	});

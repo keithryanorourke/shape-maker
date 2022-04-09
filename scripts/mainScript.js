@@ -37,6 +37,7 @@ const sortShapesBySize = (arr) => {
 	});
 };
 
+
 // DRAW MODE HANDLERS
 // onClick for draggable area, creates new div and appends to draggable area. This function is unique to Draw mode.
 const createNewShape = (e) => {
@@ -44,6 +45,10 @@ const createNewShape = (e) => {
 	draggableAreaListenerState.addListener({
 		eventType: "mousemove",
 		handler: sizeNewShape,
+	});
+	draggableAreaListenerState.addListener({
+		eventType: "mouseup",
+		handler: releaseNewShape,
 	});
 	// Create new DOM element and ElementState object for said array
 	const newShapeListenerState = new ElementListenerState(
@@ -56,6 +61,7 @@ const createNewShape = (e) => {
 	newShapeEl.style.border = `${sizeToString(borderThickness, "px")} solid ${
 		colorArray[colorIndex]
 	}`;
+	newShapeEl.style.zIndex = shapesArray.length+1;
 	draggableArea.appendChild(newShapeEl);
 	selectedIndex = shapeIndex;
 	// Set initial values for position of shape
@@ -83,6 +89,10 @@ const sizeNewShape = (e) => {
 		}
 		if (e.clientY < startingCursorPosition.getY()) {
 			currentShapeEl.style.top = (e.clientY - 80).toString() + "px";
+		}
+		// Backup way to force call mouseup handler in case mouseup doesn't register
+		if(!e.buttons) {
+			releaseNewShape(e);
 		}
 };
 
@@ -144,7 +154,7 @@ const focusShape = (e) => {
 	currentShapePos.setX(stringToSize(shapeEl.style.left))
 	currentShapePos.setY(stringToSize(shapeEl.style.top))
 	draggableAreaListenerState.addListener({eventType: 'mousemove', handler: moveShape})
-	documentListenerState.addListener({eventType: 'mouseup', handler: releaseShape})
+	draggableAreaListenerState.addListener({eventType: 'mouseup', handler: releaseShape})
 }
 
 // Update x/y co-ordinates of shape based on cursor movement
@@ -156,11 +166,14 @@ const moveShape = (e) => {
 	currentShapePos.setY(stringToSize(newY));
 	shapeEl.style.left = newX;
 	shapeEl.style.top = newY;
+	if(!e.buttons) {
+		releaseShape(e);
+	}
 }
 
 const releaseShape = (e) => {
 	draggableAreaListenerState.removeListener({eventType: 'mousemove', handler: moveShape})
-	documentListenerState.removeListener({eventType: 'mouseup', handler: releaseShape})
+	draggableAreaListenerState.removeListener({eventType: 'mouseup', handler: releaseShape})
 }
 
 
