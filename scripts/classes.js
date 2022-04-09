@@ -17,14 +17,23 @@ class ElementListenerState {
 		this.currentListeners = initialListeners || [];
 	}
 
+	getCurrentListeners() {
+		return [...this.currentListeners];
+	}
+
+	setCurrentListeners(arr) {
+		this.currentListeners = [...arr];
+	}
+
 	removePrevListeners() {
-		this.currentListeners.forEach((listener) => {
+		const prevListeners = this.getCurrentListeners();
+		prevListeners.forEach((listener) => {
 			this.element.removeEventListener(
 				listener.eventType,
 				listener.handler
 			);
 		});
-		this.currentListeners = [];
+		this.setCurrentListeners([]);
 	}
 
 	/**
@@ -49,13 +58,18 @@ class ElementListenerState {
 		// Return error code if passed in listener is not registered with list
 		if (listenerIndex === -1) {
 			console.warn(
-				"Listener to be removed is not currently registered in list! The listener cannot be removed."
+				`Listener to be removed is not currently registered in list! The listener cannot be removed. \n${listener.eventType}`
 			);
 			return 404;
 		}
 		// Remove listener from DOM element and then update registered list in state
 		this.element.removeEventListener(listener.eventType, listener.handler);
-		this.currentListeners.splice(listenerIndex, 1);
+		const splicedListeners = this.getCurrentListeners()
+		splicedListeners.splice(
+			listenerIndex,
+			1
+		);
+		this.setCurrentListeners(splicedListeners);
 	}
 
 	/**
@@ -65,12 +79,14 @@ class ElementListenerState {
 	 */
 	addListener(listener) {
 		// Return error code if listener already registered in list
-		if (this.currentListeners.includes(listener)) {
+		if (this.getCurrentListeners().includes(listener)) {
 			console.warn("Provided listener is already registered in list!");
 			return -1;
 		}
 		this.element.addEventListener(listener.eventType, listener.handler);
-		this.currentListeners.push(listener);
+		const newListeners = this.getCurrentListeners()
+		newListeners.push(listener)
+		this.setCurrentListeners(newListeners);
 	}
 
 	/**
@@ -83,7 +99,7 @@ class ElementListenerState {
 		listenersToAdd.forEach((listener) => {
 			this.element.addEventListener(listener.eventType, listener.handler);
 		});
-		this.currentListeners = listenersToAdd;
+		this.setCurrentListeners(listenersToAdd);
 	}
 
 	/**
@@ -107,5 +123,28 @@ class ElementListenerState {
 			"There is already a DOM element registered to this ListenerState. If you wish to overwrite said element, pass true as the second argument in this method for a hard fix."
 		);
 		return 400;
+	}
+}
+
+class PositionCoordinates {
+	constructor(x, y) {
+		this.x = x || 0;
+		this.y = y || 0;
+	}
+
+	getX() {
+		return this.x;
+	}
+
+	getY() {
+		return this.y;
+	}
+
+	setX(num) {
+		this.x = num;
+	}
+
+	setY(num) {
+		this.y = num;
 	}
 }

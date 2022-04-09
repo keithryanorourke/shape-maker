@@ -11,3 +11,9 @@ I hope you'll give ShapeMaker a try and enjoy the heck out of it!
 Tech Stack:
 ![Logo](https://skillicons.dev/icons?i=html,css,js,scss)
 
+
+## Acknowledgements
+
+ - [README made using readme.so](https://readme.so)
+ - [Tech Stack icons provided by tadnpfun's skill-icons repo](https://github.com/tandpfun/skill-icons#icons-list)
+
