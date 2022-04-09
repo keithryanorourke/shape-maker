@@ -240,7 +240,6 @@ const clickShape = (e) => {
 
 const touchShape = (e) => {
 	e.preventDefault();
-	console.log(e);
 	if (e.touches > 1) {
 		draggableAreaListenerState.removeListener({
 			eventType: "touchmove",
