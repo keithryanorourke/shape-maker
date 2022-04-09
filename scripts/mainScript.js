@@ -198,7 +198,7 @@ const shapeClickHandler = (e) => {
 // Delete key listener which deletes selected shape and calls functio to re-index event listeners
 const deleteShape = (e) => {
 	if (
-		(e.key === "Delete" || e.key === "Backspace") &&
+		(e.key === "Delete" || e.key === "Backspace" || e.type === "click") &&
 		shapesArray[selectedIndex]
 	) {
 		draggableArea.removeChild(shapesArray[selectedIndex].element);

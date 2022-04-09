@@ -17,11 +17,7 @@
 	</head>
 	<body>
 		<header class="controls">
-			<div class="controls__container">
-				<span class="controls__heading">BORDER THICKNESS:</span>
-				<button id="borderPlus" class="button">+</button>
-				<button id="borderMinus" class="button">-</button>
-			</div>
+			<h1 class="title">ShapeMaker</h1>
 			<div class="controls__container">
 				<span class="controls__heading">SHAPE:</span>
 				<button id="square" class="button button--selected">
@@ -48,22 +44,34 @@
 				<span class="controls__heading">PREVIEW:</span>
 				<div id="preview" class="preview square"></div>
 			</div>
-			<div class="controls__container">
-				<span class="controls__heading">MODE:</span>
-				<button id="draw" class="button button--selected">
-					<img src="./assets/icons/pencil.svg" alt="Pencil icon.">
-				</button>
-				<button id="select" class="button">
-					<img src="./assets/icons/hand-index.svg" alt="Finger pointing icon">
-				</button>
-				<button id="move" class="button">
-					<img src="./assets/icons/arrows-move.svg" alt="4 arrows pointing away from center point.">
-				</button>
-			</div>
 		</header>
 		<main>
 			<span class="drawing-area"></span>
 		</main>
-		<footer class="controls"></footer>
+		<footer class="controls">
+			<div class="controls__container">
+				<span class="controls__heading">BORDER THICKNESS:</span>
+				<button id="borderPlus" class="button">+</button>
+				<button id="borderMinus" class="button">-</button>
+			</div>
+			<div class="controls__container">
+				<span class="controls__heading">MODE:</span>
+				<button id="draw" class="button button--selected">
+					<img src="./assets/icons/pencil.svg" alt="Pencil icon." />
+				</button>
+				<button id="select" class="button">
+					<img
+						src="./assets/icons/hand-index.svg"
+						alt="Finger pointing icon"
+					/>
+				</button>
+				<button id="move" class="button">
+					<img
+						src="./assets/icons/arrows-move.svg"
+						alt="4 arrows pointing away from center point."
+					/>
+				</button>
+			</div>
+		</footer>
 	</body>
 </html>
