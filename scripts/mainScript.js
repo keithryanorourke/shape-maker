@@ -37,18 +37,7 @@ const sortShapesBySize = (arr) => {
 	});
 };
 
-// DRAW MODE HANDLERS
-// onClick for draggable area, creates new div and appends to draggable area. This function is unique to Draw mode.
-const clickNewShape = (e) => {
-	// newShape remains true as long as we are creating/resizing a shape
-	draggableAreaListenerState.addListener({
-		eventType: "mousemove",
-		handler: sizeNewShapeMouse,
-	});
-	draggableAreaListenerState.addListener({
-		eventType: "mouseup",
-		handler: releaseNewShapeMouse,
-	});
+const createNewShape = (clientX, clientY) => {
 	// Create new DOM element and ElementState object for said array
 	const newShapeListenerState = new ElementListenerState(
 		document.createElement("div")
@@ -64,8 +53,8 @@ const clickNewShape = (e) => {
 	draggableArea.appendChild(newShapeEl);
 	selectedIndex = shapeIndex;
 	// Set initial values for position of shape
-	startingCursorPosition.setX(e.clientX);
-	startingCursorPosition.setY(e.clientY);
+	startingCursorPosition.setX(clientX);
+	startingCursorPosition.setY(clientY);
 	newShapeEl.style.top = sizeToString(
 		startingCursorPosition.getY() - 80,
 		"px"
@@ -73,25 +62,106 @@ const clickNewShape = (e) => {
 	newShapeEl.style.left = sizeToString(startingCursorPosition.getX(), "px");
 };
 
+// DRAW MODE HANDLERS
+// onClick for draggable area, creates new div and appends to draggable area. This function is unique to Draw mode.
+const clickNewShape = (e) => {
+	console.log(e);
+	// Redirect to touch handler if event type was touch
+	if (e.touches) {
+		touchNewShape(e);
+		return;
+	}
+	// create new shape and add mouse listeners
+	createNewShape(e.clientX, e.clientY);
+	draggableAreaListenerState.addListener({
+		eventType: "mousemove",
+		handler: sizeNewShapeMouse,
+	});
+	draggableAreaListenerState.addListener({
+		eventType: "mouseup",
+		handler: releaseNewShapeMouse,
+	});
+};
+
+const touchNewShape = (e) => {
+	e.preventDefault();
+	const touchCoordinates = e.targetTouches[0];
+	console.log(touchCoordinates);
+	if (e.touches.length > 1) {
+		draggableAreaListenerState.removeListener(
+			"touchmove",
+			sizeNewShapeTouch
+		);
+		return;
+	}
+	// Create new shape and add touch listeners
+	createNewShape(
+		parseInt(touchCoordinates.clientX),
+		parseInt(touchCoordinates.clientY)
+	);
+	draggableAreaListenerState.addListener({
+		eventType: "touchmove",
+		handler: sizeNewShapeTouch,
+	});
+	draggableAreaListenerState.addListener({
+		eventType: "touchend",
+		handler: releaseNewShapeTouch,
+	});
+};
+
+const sizeShapeMath = (shape, clientX, clientY) => {
+	shape.style.width = sizeToString(
+		Math.abs(clientX - startingCursorPosition.getX()),
+		"px"
+	);
+	shape.style.height = sizeToString(
+		Math.abs(clientY - startingCursorPosition.getY()),
+		"px"
+	);
+	// Handling for cases where user drags up or left
+	if (clientX < startingCursorPosition.getX()) {
+		shape.style.left = e.clientX.toString() + "px";
+	}
+	if (clientY < startingCursorPosition.getY()) {
+		shape.style.top = (e.clientY - 80).toString() + "px";
+	}
+};
+
+const sizeNewShapeTouch = (e) => {
+	e.preventDefault();
+	const currentShapeEl = shapesArray[shapeIndex].element;
+	const currentTouchCoords = e.touches[0]
+	sizeShapeMath(currentShapeEl, parseInt(currentTouchCoords.clientX), parseInt(currentTouchCoords.clientY))
+};
+
+const finalizeShape = () => {
+	sortShapesBySize(shapesArray);
+	// Cycle through color array and change preview color
+	colorIndex++;
+	if (colorIndex >= colorArray.length) {
+		colorIndex = 0;
+	}
+	preview.style.borderColor = colorArray[colorIndex];
+	// Move on to next shape
+	shapeIndex++;
+};
+
+const releaseNewShapeTouch = (e) => {
+	draggableAreaListenerState.removeListener({
+		eventType: "touchmove",
+		handler: sizeNewShapeTouch,
+	});
+	draggableAreaListenerState.removeListener({
+		eventType: "touchend",
+		handler: releaseNewShapeTouch,
+	});
+};
+
 // mousemove handler for draggable area, updates size of new shape div until mouse is released.
 const sizeNewShapeMouse = (e) => {
 	const currentShapeEl = shapesArray[shapeIndex].element;
 	// Resize shape based on cursor movement
-	currentShapeEl.style.width = sizeToString(
-		Math.abs(e.clientX - startingCursorPosition.getX()),
-		"px"
-	);
-	currentShapeEl.style.height = sizeToString(
-		Math.abs(e.clientY - startingCursorPosition.getY()),
-		"px"
-	);
-	// Handling for cases where user drags up or left
-	if (e.clientX < startingCursorPosition.getX()) {
-		currentShapeEl.style.left = e.clientX.toString() + "px";
-	}
-	if (e.clientY < startingCursorPosition.getY()) {
-		currentShapeEl.style.top = (e.clientY - 80).toString() + "px";
-	}
+	sizeShapeMath(currentShapeEl, e.clientX, e.clientY);
 	// Backup way to force call mouseup handler in case mouseup doesn't register
 	if (!e.buttons) {
 		releaseNewShapeMouse(e);
@@ -104,15 +174,11 @@ const releaseNewShapeMouse = (e) => {
 		eventType: "mousemove",
 		handler: sizeNewShapeMouse,
 	});
-	sortShapesBySize(shapesArray);
-	// Cycle through color array and change preview color
-	colorIndex++;
-	if (colorIndex >= colorArray.length) {
-		colorIndex = 0;
-	}
-	preview.style.borderColor = colorArray[colorIndex];
-	// Move on to next shape
-	shapeIndex++;
+	draggableAreaListenerState.removeListener({
+		eventType: "mouseup",
+		handler: releaseNewShapeMouse,
+	});
+	finalizeShape();
 };
 
 // SELECT MODE HANDLERS

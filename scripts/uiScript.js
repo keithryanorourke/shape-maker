@@ -112,7 +112,7 @@ const drawMode = () => {
 	});
 	draggableAreaListenerState.applyModeListeners([
 		{ eventType: "mousedown", handler: clickNewShape },
-		{ eventType: "touchstart", handler: clickNewShape}
+		{ eventType: "touchstart", handler: touchNewShape}
 	]);
 	mode = "draw";
 	setModeButtonClasses(drawButton, [selectButton, moveButton]);
