@@ -18,17 +18,22 @@ class ElementListenerState {
 	}
 
 	getCurrentListeners() {
-		return this.currentListeners;
+		return [...this.currentListeners];
+	}
+
+	setCurrentListeners(arr) {
+		this.currentListeners = [...arr];
 	}
 
 	removePrevListeners() {
-		this.currentListeners.forEach((listener) => {
+		const prevListeners = this.getCurrentListeners();
+		prevListeners.forEach((listener) => {
 			this.element.removeEventListener(
 				listener.eventType,
 				listener.handler
 			);
 		});
-		this.currentListeners = [];
+		this.setCurrentListeners([]);
 	}
 
 	/**
@@ -52,7 +57,6 @@ class ElementListenerState {
 		);
 		// Return error code if passed in listener is not registered with list
 		if (listenerIndex === -1) {
-			console.log(this.currentListeners);
 			console.warn(
 				`Listener to be removed is not currently registered in list! The listener cannot be removed. \n${listener.eventType}`
 			);
@@ -60,7 +64,12 @@ class ElementListenerState {
 		}
 		// Remove listener from DOM element and then update registered list in state
 		this.element.removeEventListener(listener.eventType, listener.handler);
-		this.currentListeners.splice(listenerIndex, 1);
+		const splicedListeners = this.getCurrentListeners()
+		splicedListeners.splice(
+			listenerIndex,
+			1
+		);
+		this.setCurrentListeners(splicedListeners);
 	}
 
 	/**
@@ -70,12 +79,14 @@ class ElementListenerState {
 	 */
 	addListener(listener) {
 		// Return error code if listener already registered in list
-		if (this.currentListeners.includes(listener)) {
+		if (this.getCurrentListeners().includes(listener)) {
 			console.warn("Provided listener is already registered in list!");
 			return -1;
 		}
 		this.element.addEventListener(listener.eventType, listener.handler);
-		this.currentListeners.push(listener);
+		const newListeners = this.getCurrentListeners()
+		newListeners.push(listener)
+		this.setCurrentListeners(newListeners);
 	}
 
 	/**
@@ -88,7 +99,7 @@ class ElementListenerState {
 		listenersToAdd.forEach((listener) => {
 			this.element.addEventListener(listener.eventType, listener.handler);
 		});
-		this.currentListeners = listenersToAdd;
+		this.setCurrentListeners(listenersToAdd);
 	}
 
 	/**
