@@ -9,13 +9,17 @@ I hope you'll give ShapeMaker a try and enjoy the heck out of it!
 
 
 ## Tech Stack
-![Logo](https://skillicons.dev/icons?i=html,css,js,scss)
+![Logo](https://skillicons.dev/icons?i=html,css,scss,js)
 
 
 ## Acknowledgements
 
- - [README made using readme.so](https://readme.so)
- - [Tech Stack icons provided by tadnpfun's skill-icons repo](https://github.com/tandpfun/skill-icons#icons-list)
+ - README made using [readme.so](https://readme.so) made by [Katherine Peterson](https://katherinempeterson.com/)
+ - Tech Stack icons provided by [tadnpfun's skill-icons repo](https://github.com/tandpfun/skill-icons#icons-list)
+ - favicon made using [Favicon Generator](https://favicon.io) made by [John Sorrentino](https://twitter.com/johnsorrentino)
  - [UI icons provided by Bootstrap's icon library](https://icons.getbootstrap.com/)
- - [favicon made using Favicon Generator](https://favicon.io/favicon-generator/)
 
+## Deployment
+
+This project is currently deployed using [Netlify](https://netlify.com)!
+You can visit my portfolio at [shapemaker.app](https://shapemaker.app).
