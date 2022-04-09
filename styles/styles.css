@@ -6,14 +6,15 @@
 
 html,
 body,
-main {
+main,
+.drawing-area {
   padding: 0;
   margin: 0;
   width: 100%;
   height: 100%;
 }
 
-main {
+body {
   font-family: "Roboto Mono";
   letter-spacing: 0.125rem;
   font-weight: 600;
@@ -96,7 +97,6 @@ main {
   overflow: hidden;
   display: block;
   width: 100%;
-  height: 90%;
   border: 2px solid black;
   background-color: #191919;
   background: linear-gradient(#111, #151515);
