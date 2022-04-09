@@ -16,4 +16,5 @@ Tech Stack:
 
  - [README made using readme.so](https://readme.so)
  - [Tech Stack icons provided by tadnpfun's skill-icons repo](https://github.com/tandpfun/skill-icons#icons-list)
+ - [UI icons provided by Bootstrap's icon library](https://icons.getbootstrap.com/)
 
