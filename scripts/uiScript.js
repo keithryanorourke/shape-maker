@@ -150,6 +150,9 @@ const moveMode = () => {
 	});
 	mode = "move";
 	setModeButtonClasses(moveButton, [selectButton, drawButton]);
+	if (shapesArray[selectedIndex]) {
+		shapesArray[selectedIndex].element.classList.remove("shape--selected");
+	}
 }
 
 // Mode selection listeners

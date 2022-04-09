@@ -17,6 +17,10 @@ class ElementListenerState {
 		this.currentListeners = initialListeners || [];
 	}
 
+	getCurrentListeners() {
+		return this.currentListeners;
+	}
+
 	removePrevListeners() {
 		this.currentListeners.forEach((listener) => {
 			this.element.removeEventListener(
@@ -107,5 +111,28 @@ class ElementListenerState {
 			"There is already a DOM element registered to this ListenerState. If you wish to overwrite said element, pass true as the second argument in this method for a hard fix."
 		);
 		return 400;
+	}
+}
+
+class PositionCoordinates {
+	constructor(x, y) {
+		this.x = x || 0
+		this.y = y || 0
+	}
+
+	getX() {
+		return this.x;
+	}
+
+	getY() {
+		return this.y;
+	}
+
+	setX(num) {
+		this.x = num;
+	}
+
+	setY(num) {
+		this.y = num;
 	}
 }

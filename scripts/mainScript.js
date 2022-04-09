@@ -2,7 +2,7 @@ const shapesArray = [];
 let shapeIndex = 0;
 let selectedIndex = 0;
 let borderThickness = 5;
-let startingCursorPosition = {};
+const startingCursorPosition = new PositionCoordinates();
 let releaseBorderButton = false;
 let mode = "draw";
 let formOfShape = "square";
@@ -59,9 +59,10 @@ const createNewShape = (e) => {
 	draggableArea.appendChild(newShapeEl);
 	selectedIndex = shapeIndex;
 	// Set initial values for position of shape
-	startingCursorPosition = { x: e.clientX, y: e.clientY };
-	newShapeEl.style.top = sizeToString(startingCursorPosition.y - 80, "px");
-	newShapeEl.style.left = sizeToString(startingCursorPosition.x, "px");
+	startingCursorPosition.setX(e.clientX)
+	startingCursorPosition.setY(e.clientY)
+	newShapeEl.style.top = sizeToString(startingCursorPosition.getY() - 80, "px");
+	newShapeEl.style.left = sizeToString(startingCursorPosition.getX(), "px");
 };
 
 // mousemove handler for draggable area, updates size of new shape div until mouse is released.
@@ -69,18 +70,18 @@ const sizeNewShape = (e) => {
 	const currentShapeEl = shapesArray[shapeIndex].element;
 		// Resize shape based on cursor movement
 		currentShapeEl.style.width = sizeToString(
-			Math.abs(e.clientX - startingCursorPosition.x),
+			Math.abs(e.clientX - startingCursorPosition.getX()),
 			"px"
 		);
 		currentShapeEl.style.height = sizeToString(
-			Math.abs(e.clientY - startingCursorPosition.y),
+			Math.abs(e.clientY - startingCursorPosition.getY()),
 			"px"
 		);
 		// Handling for cases where user drags up or left
-		if (e.clientX < startingCursorPosition.x) {
+		if (e.clientX < startingCursorPosition.getX()) {
 			currentShapeEl.style.left = e.clientX.toString() + "px";
 		}
-		if (e.clientY < startingCursorPosition.y) {
+		if (e.clientY < startingCursorPosition.getY()) {
 			currentShapeEl.style.top = (e.clientY - 80).toString() + "px";
 		}
 };
@@ -125,8 +126,8 @@ const deleteShape = (e) => {
 	}
 };
 
-const startingShapePos = {};
-const currentShapePos = {};
+const startingShapePos = new PositionCoordinates();
+const currentShapePos = new PositionCoordinates();
 
 // MOVE MODE HANDLERS
 // Focus specific shape to move when clicked on
@@ -136,15 +137,12 @@ const focusShape = (e) => {
 	// Maybe make these two lines of code into a function?
 	borderThickness = stringToSize(shapeEl.style.borderWidth);
 	preview.style.borderWidth = sizeToString(borderThickness, "px");
-	startingCursorPosition.x = e.clientX
-	startingCursorPosition.y = e.clientY
-	if(currentShapePos.x) {
-		startingShapePos.x = currentShapePos.x;
-		startingShapePos.y = currentShapePos.y;
-	} else {
-		startingShapePos.x = stringToSize(shapeEl.style.left);
-		startingShapePos.y = stringToSize(shapeEl.style.top);
-	}
+	startingCursorPosition.setX(e.clientX)
+	startingCursorPosition.setY(e.clientY)
+	startingShapePos.setX(stringToSize(shapeEl.style.left));
+	startingShapePos.setY(stringToSize(shapeEl.style.top));
+	currentShapePos.setX(stringToSize(shapeEl.style.left))
+	currentShapePos.setY(stringToSize(shapeEl.style.top))
 	draggableAreaListenerState.addListener({eventType: 'mousemove', handler: moveShape})
 	documentListenerState.addListener({eventType: 'mouseup', handler: releaseShape})
 }
@@ -152,11 +150,10 @@ const focusShape = (e) => {
 // Update x/y co-ordinates of shape based on cursor movement
 const moveShape = (e) => {
 	const shapeEl = shapesArray[selectedIndex].element;
-	const newX = sizeToString(startingShapePos.x + e.clientX - startingCursorPosition.x, 'px')
-	const newY = sizeToString(startingShapePos.y + e.clientY - startingCursorPosition.y, 'px')
-	currentShapePos.x = stringToSize(newX)
-	currentShapePos.y = stringToSize(newY)
-	// shapeEl.style.transform = `translate(${newX}, ${newY})`
+	const newX = sizeToString(startingShapePos.getX() + e.clientX - startingCursorPosition.getX(), 'px')
+	const newY = sizeToString(startingShapePos.getY() + e.clientY - startingCursorPosition.getY(), 'px')
+	currentShapePos.setX(stringToSize(newX));
+	currentShapePo.setY(stringToSize(newY))
 	shapeEl.style.left = newX;
 	shapeEl.style.top = newY;
 }
