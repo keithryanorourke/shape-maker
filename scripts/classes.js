@@ -64,11 +64,8 @@ class ElementListenerState {
 		}
 		// Remove listener from DOM element and then update registered list in state
 		this.element.removeEventListener(listener.eventType, listener.handler);
-		const splicedListeners = this.getCurrentListeners()
-		splicedListeners.splice(
-			listenerIndex,
-			1
-		);
+		const splicedListeners = this.getCurrentListeners();
+		splicedListeners.splice(listenerIndex, 1);
 		this.setCurrentListeners(splicedListeners);
 	}
 
@@ -84,8 +81,8 @@ class ElementListenerState {
 			return -1;
 		}
 		this.element.addEventListener(listener.eventType, listener.handler);
-		const newListeners = this.getCurrentListeners()
-		newListeners.push(listener)
+		const newListeners = this.getCurrentListeners();
+		newListeners.push(listener);
 		this.setCurrentListeners(newListeners);
 	}
 
@@ -126,6 +123,8 @@ class ElementListenerState {
 	}
 }
 
+// This class is intended for objects that need to keep track of some type of x/y coordinates globally
+// Avoid using if you only need a snapshot of x/y coordinates
 class PositionCoordinates {
 	constructor(x, y) {
 		this.x = x || 0;
