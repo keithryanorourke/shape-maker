@@ -17,4 +17,5 @@ I hope you'll give ShapeMaker a try and enjoy the heck out of it!
  - [README made using readme.so](https://readme.so)
  - [Tech Stack icons provided by tadnpfun's skill-icons repo](https://github.com/tandpfun/skill-icons#icons-list)
  - [UI icons provided by Bootstrap's icon library](https://icons.getbootstrap.com/)
+ - [favicon made using Favicon Generator](https://favicon.io/favicon-generator/)
 
