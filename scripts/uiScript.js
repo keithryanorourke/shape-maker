@@ -111,7 +111,8 @@ const drawMode = () => {
 		shape.removePrevListeners();
 	});
 	draggableAreaListenerState.applyModeListeners([
-		{ eventType: "mousedown", handler: createNewShape },
+		{ eventType: "mousedown", handler: clickNewShape },
+		{ eventType: "touchstart", handler: clickNewShape}
 	]);
 	mode = "draw";
 	setModeButtonClasses(drawButton, [selectButton, moveButton]);
@@ -144,7 +145,7 @@ const moveMode = () => {
 	documentListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
-			{ eventType: "mousedown", handler: focusShape },
+			{ eventType: "mousedown", handler: clickShape },
 		]);
 	});
 	mode = "move";

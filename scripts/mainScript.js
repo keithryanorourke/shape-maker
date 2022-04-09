@@ -39,15 +39,15 @@ const sortShapesBySize = (arr) => {
 
 // DRAW MODE HANDLERS
 // onClick for draggable area, creates new div and appends to draggable area. This function is unique to Draw mode.
-const createNewShape = (e) => {
+const clickNewShape = (e) => {
 	// newShape remains true as long as we are creating/resizing a shape
 	draggableAreaListenerState.addListener({
 		eventType: "mousemove",
-		handler: sizeNewShape,
+		handler: sizeNewShapeMouse,
 	});
 	draggableAreaListenerState.addListener({
 		eventType: "mouseup",
-		handler: releaseNewShape,
+		handler: releaseNewShapeMouse,
 	});
 	// Create new DOM element and ElementState object for said array
 	const newShapeListenerState = new ElementListenerState(
@@ -74,7 +74,7 @@ const createNewShape = (e) => {
 };
 
 // mousemove handler for draggable area, updates size of new shape div until mouse is released.
-const sizeNewShape = (e) => {
+const sizeNewShapeMouse = (e) => {
 	const currentShapeEl = shapesArray[shapeIndex].element;
 	// Resize shape based on cursor movement
 	currentShapeEl.style.width = sizeToString(
@@ -94,15 +94,15 @@ const sizeNewShape = (e) => {
 	}
 	// Backup way to force call mouseup handler in case mouseup doesn't register
 	if (!e.buttons) {
-		releaseNewShape(e);
+		releaseNewShapeMouse(e);
 	}
 };
 
 // mouseup handler for draggable area, disables mousemove for draggable area and updated index for colorsArray and shapesArray
-const releaseNewShape = (e) => {
+const releaseNewShapeMouse = (e) => {
 	draggableAreaListenerState.removeListener({
 		eventType: "mousemove",
-		handler: sizeNewShape,
+		handler: sizeNewShapeMouse,
 	});
 	sortShapesBySize(shapesArray);
 	// Cycle through color array and change preview color
@@ -143,7 +143,7 @@ const currentShapePos = new PositionCoordinates();
 
 // MOVE MODE HANDLERS
 // Focus specific shape to move when clicked on
-const focusShape = (e) => {
+const clickShape = (e) => {
 	selectedIndex = findShape(e.target);
 	const shapeEl = e.target;
 	// Maybe make these two lines of code into a function?
@@ -157,16 +157,16 @@ const focusShape = (e) => {
 	currentShapePos.setY(stringToSize(shapeEl.style.top));
 	draggableAreaListenerState.addListener({
 		eventType: "mousemove",
-		handler: moveShape,
+		handler: moveShapeMouse,
 	});
 	draggableAreaListenerState.addListener({
 		eventType: "mouseup",
-		handler: releaseShape,
+		handler: releaseShapeMouse,
 	});
 };
 
 // Update x/y co-ordinates of shape based on cursor movement
-const moveShape = (e) => {
+const moveShapeMouse = (e) => {
 	const shapeEl = shapesArray[selectedIndex].element;
 	const newX = sizeToString(
 		startingShapePos.getX() + e.clientX - startingCursorPosition.getX(),
@@ -181,18 +181,18 @@ const moveShape = (e) => {
 	shapeEl.style.left = newX;
 	shapeEl.style.top = newY;
 	if (!e.buttons) {
-		releaseShape(e);
+		releaseShapeMouse(e);
 	}
 };
 
-const releaseShape = (e) => {
+const releaseShapeMouse = (e) => {
 	draggableAreaListenerState.removeListener({
 		eventType: "mousemove",
-		handler: moveShape,
+		handler: moveShapeMouse,
 	});
 	draggableAreaListenerState.removeListener({
 		eventType: "mouseup",
-		handler: releaseShape,
+		handler: releaseShapeMouse,
 	});
 };
 
