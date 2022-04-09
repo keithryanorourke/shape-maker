@@ -143,6 +143,11 @@ const moveMode = () => {
 	setCursorIcon('arrows-move.svg');
 	draggableAreaListenerState.removePrevListeners();
 	documentListenerState.removePrevListeners();
+	shapesArray.forEach((shape) => {
+		shape.applyModeListeners([
+			{ eventType: "mousedown", handler: focusShape},
+		]);
+	});
 	mode = "move";
 	setModeButtonClasses(moveButton, [selectButton, drawButton]);
 }
