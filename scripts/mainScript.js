@@ -120,10 +120,10 @@ const sizeShapeMath = (shape, clientX, clientY) => {
 	);
 	// Handling for cases where user drags up or left
 	if (clientX < startingCursorPosition.getX()) {
-		shape.style.left = e.clientX.toString() + "px";
+		shape.style.left = clientX.toString() + "px";
 	}
 	if (clientY < startingCursorPosition.getY()) {
-		shape.style.top = (e.clientY - 80).toString() + "px";
+		shape.style.top = (clientY - 80).toString() + "px";
 	}
 };
 
@@ -132,6 +132,17 @@ const sizeNewShapeTouch = (e) => {
 	const currentShapeEl = shapesArray[shapeIndex].element;
 	const currentTouchCoords = e.touches[0]
 	sizeShapeMath(currentShapeEl, parseInt(currentTouchCoords.clientX), parseInt(currentTouchCoords.clientY))
+};
+
+// mousemove handler for draggable area, updates size of new shape div until mouse is released.
+const sizeNewShapeMouse = (e) => {
+	const currentShapeEl = shapesArray[shapeIndex].element;
+	// Resize shape based on cursor movement
+	sizeShapeMath(currentShapeEl, e.clientX, e.clientY);
+	// Backup way to force call mouseup handler in case mouseup doesn't register
+	if (!e.buttons) {
+		releaseNewShapeMouse(e);
+	}
 };
 
 const finalizeShape = () => {
@@ -155,17 +166,7 @@ const releaseNewShapeTouch = (e) => {
 		eventType: "touchend",
 		handler: releaseNewShapeTouch,
 	});
-};
-
-// mousemove handler for draggable area, updates size of new shape div until mouse is released.
-const sizeNewShapeMouse = (e) => {
-	const currentShapeEl = shapesArray[shapeIndex].element;
-	// Resize shape based on cursor movement
-	sizeShapeMath(currentShapeEl, e.clientX, e.clientY);
-	// Backup way to force call mouseup handler in case mouseup doesn't register
-	if (!e.buttons) {
-		releaseNewShapeMouse(e);
-	}
+	finalizeShape();
 };
 
 // mouseup handler for draggable area, disables mousemove for draggable area and updated index for colorsArray and shapesArray
