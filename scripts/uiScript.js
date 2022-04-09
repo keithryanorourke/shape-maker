@@ -45,6 +45,18 @@ shapeButtons.forEach((button) => {
 const borderPlus = document.getElementById("borderPlus");
 const borderMinus = document.getElementById("borderMinus");
 
+// Make delete button for select mode
+const deleteContainer = document.createElement("div");
+deleteContainer.className = "controls__container";
+const deleteButton = document.createElement("button");
+deleteButton.addEventListener("click", deleteShape);
+deleteButton.className = "button";
+const deleteIcon = document.createElement("img");
+deleteIcon.setAttribute("src", "./assets/icons/delete.svg");
+deleteIcon.setAttribute("alt", "Trash bin icon.");
+deleteContainer.appendChild(deleteButton);
+deleteButton.appendChild(deleteIcon);
+
 // Button events
 borderPlus.addEventListener("mousedown", () => {
 	releaseBorderButton = false;
@@ -106,7 +118,9 @@ const setCursorIcon = (fileName) => {
 
 const drawMode = () => {
 	setCursorIcon("pencil.svg");
+	documentListenerState.removePrevListeners();
 	draggableAreaListenerState.removePrevListeners();
+	deleteContainer.remove();
 	shapesArray.forEach((shape) => {
 		shape.removePrevListeners();
 	});
@@ -121,7 +135,9 @@ const drawMode = () => {
 	}
 };
 
+const footer = document.querySelector("footer");
 const selectMode = () => {
+	footer.appendChild(deleteContainer);
 	setCursorIcon("hand-index.svg");
 	draggableAreaListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
@@ -143,6 +159,7 @@ const moveMode = () => {
 	setCursorIcon("arrows-move.svg");
 	draggableAreaListenerState.removePrevListeners();
 	documentListenerState.removePrevListeners();
+	deleteContainer.remove();
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
 			{ eventType: "mousedown", handler: clickShape },
