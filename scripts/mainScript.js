@@ -37,7 +37,6 @@ const sortShapesBySize = (arr) => {
 	});
 };
 
-
 // DRAW MODE HANDLERS
 // onClick for draggable area, creates new div and appends to draggable area. This function is unique to Draw mode.
 const createNewShape = (e) => {
@@ -61,39 +60,42 @@ const createNewShape = (e) => {
 	newShapeEl.style.border = `${sizeToString(borderThickness, "px")} solid ${
 		colorArray[colorIndex]
 	}`;
-	newShapeEl.style.zIndex = shapesArray.length+1;
+	newShapeEl.style.zIndex = shapesArray.length + 1;
 	draggableArea.appendChild(newShapeEl);
 	selectedIndex = shapeIndex;
 	// Set initial values for position of shape
-	startingCursorPosition.setX(e.clientX)
-	startingCursorPosition.setY(e.clientY)
-	newShapeEl.style.top = sizeToString(startingCursorPosition.getY() - 80, "px");
+	startingCursorPosition.setX(e.clientX);
+	startingCursorPosition.setY(e.clientY);
+	newShapeEl.style.top = sizeToString(
+		startingCursorPosition.getY() - 80,
+		"px"
+	);
 	newShapeEl.style.left = sizeToString(startingCursorPosition.getX(), "px");
 };
 
 // mousemove handler for draggable area, updates size of new shape div until mouse is released.
 const sizeNewShape = (e) => {
 	const currentShapeEl = shapesArray[shapeIndex].element;
-		// Resize shape based on cursor movement
-		currentShapeEl.style.width = sizeToString(
-			Math.abs(e.clientX - startingCursorPosition.getX()),
-			"px"
-		);
-		currentShapeEl.style.height = sizeToString(
-			Math.abs(e.clientY - startingCursorPosition.getY()),
-			"px"
-		);
-		// Handling for cases where user drags up or left
-		if (e.clientX < startingCursorPosition.getX()) {
-			currentShapeEl.style.left = e.clientX.toString() + "px";
-		}
-		if (e.clientY < startingCursorPosition.getY()) {
-			currentShapeEl.style.top = (e.clientY - 80).toString() + "px";
-		}
-		// Backup way to force call mouseup handler in case mouseup doesn't register
-		if(!e.buttons) {
-			releaseNewShape(e);
-		}
+	// Resize shape based on cursor movement
+	currentShapeEl.style.width = sizeToString(
+		Math.abs(e.clientX - startingCursorPosition.getX()),
+		"px"
+	);
+	currentShapeEl.style.height = sizeToString(
+		Math.abs(e.clientY - startingCursorPosition.getY()),
+		"px"
+	);
+	// Handling for cases where user drags up or left
+	if (e.clientX < startingCursorPosition.getX()) {
+		currentShapeEl.style.left = e.clientX.toString() + "px";
+	}
+	if (e.clientY < startingCursorPosition.getY()) {
+		currentShapeEl.style.top = (e.clientY - 80).toString() + "px";
+	}
+	// Backup way to force call mouseup handler in case mouseup doesn't register
+	if (!e.buttons) {
+		releaseNewShape(e);
+	}
 };
 
 // mouseup handler for draggable area, disables mousemove for draggable area and updated index for colorsArray and shapesArray
@@ -147,35 +149,52 @@ const focusShape = (e) => {
 	// Maybe make these two lines of code into a function?
 	borderThickness = stringToSize(shapeEl.style.borderWidth);
 	preview.style.borderWidth = sizeToString(borderThickness, "px");
-	startingCursorPosition.setX(e.clientX)
-	startingCursorPosition.setY(e.clientY)
+	startingCursorPosition.setX(e.clientX);
+	startingCursorPosition.setY(e.clientY);
 	startingShapePos.setX(stringToSize(shapeEl.style.left));
 	startingShapePos.setY(stringToSize(shapeEl.style.top));
-	currentShapePos.setX(stringToSize(shapeEl.style.left))
-	currentShapePos.setY(stringToSize(shapeEl.style.top))
-	draggableAreaListenerState.addListener({eventType: 'mousemove', handler: moveShape})
-	draggableAreaListenerState.addListener({eventType: 'mouseup', handler: releaseShape})
-}
+	currentShapePos.setX(stringToSize(shapeEl.style.left));
+	currentShapePos.setY(stringToSize(shapeEl.style.top));
+	draggableAreaListenerState.addListener({
+		eventType: "mousemove",
+		handler: moveShape,
+	});
+	draggableAreaListenerState.addListener({
+		eventType: "mouseup",
+		handler: releaseShape,
+	});
+};
 
 // Update x/y co-ordinates of shape based on cursor movement
 const moveShape = (e) => {
 	const shapeEl = shapesArray[selectedIndex].element;
-	const newX = sizeToString(startingShapePos.getX() + e.clientX - startingCursorPosition.getX(), 'px')
-	const newY = sizeToString(startingShapePos.getY() + e.clientY - startingCursorPosition.getY(), 'px')
+	const newX = sizeToString(
+		startingShapePos.getX() + e.clientX - startingCursorPosition.getX(),
+		"px"
+	);
+	const newY = sizeToString(
+		startingShapePos.getY() + e.clientY - startingCursorPosition.getY(),
+		"px"
+	);
 	currentShapePos.setX(stringToSize(newX));
 	currentShapePos.setY(stringToSize(newY));
 	shapeEl.style.left = newX;
 	shapeEl.style.top = newY;
-	if(!e.buttons) {
+	if (!e.buttons) {
 		releaseShape(e);
 	}
-}
+};
 
 const releaseShape = (e) => {
-	draggableAreaListenerState.removeListener({eventType: 'mousemove', handler: moveShape})
-	draggableAreaListenerState.removeListener({eventType: 'mouseup', handler: releaseShape})
-}
-
+	draggableAreaListenerState.removeListener({
+		eventType: "mousemove",
+		handler: moveShape,
+	});
+	draggableAreaListenerState.removeListener({
+		eventType: "mouseup",
+		handler: releaseShape,
+	});
+};
 
 // Function to re-index event listeners on all elements of shapesArray and reset all related index variables
 const reIndexShapes = () => {
@@ -191,4 +210,4 @@ const findShape = (shape) => {
 	return shapesArray.indexOf(
 		shapesArray.find((shapeInArray) => shapeInArray.element === shape)
 	);
-}
+};

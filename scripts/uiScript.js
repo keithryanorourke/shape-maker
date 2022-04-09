@@ -91,37 +91,37 @@ borderMinus.addEventListener("mouseup", () => {
 // Mode selection buttons
 const drawButton = document.getElementById("draw");
 const selectButton = document.getElementById("select");
-const moveButton = document.getElementById("move")
+const moveButton = document.getElementById("move");
 
 const setModeButtonClasses = (activeButton, otherButtons) => {
-	activeButton.className = "button button--selected"
-	otherButtons.forEach(button => {
-		button.className = "button"
-	})
-}
+	activeButton.className = "button button--selected";
+	otherButtons.forEach((button) => {
+		button.className = "button";
+	});
+};
 
 const setCursorIcon = (fileName) => {
-	draggableArea.style.cursor = `url(./assets/icons/${fileName}), auto`
-}
+	draggableArea.style.cursor = `url(./assets/icons/${fileName}), auto`;
+};
 
 const drawMode = () => {
-	setCursorIcon('pencil.svg');
+	setCursorIcon("pencil.svg");
 	draggableAreaListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
 		shape.removePrevListeners();
 	});
 	draggableAreaListenerState.applyModeListeners([
-		{ eventType: "mousedown", handler: createNewShape }
+		{ eventType: "mousedown", handler: createNewShape },
 	]);
 	mode = "draw";
-	setModeButtonClasses(drawButton, [selectButton, moveButton])
+	setModeButtonClasses(drawButton, [selectButton, moveButton]);
 	if (shapesArray[selectedIndex]) {
 		shapesArray[selectedIndex].element.classList.remove("shape--selected");
 	}
 };
 
 const selectMode = () => {
-	setCursorIcon('hand-index.svg');
+	setCursorIcon("hand-index.svg");
 	draggableAreaListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
@@ -132,19 +132,19 @@ const selectMode = () => {
 		{ eventType: "keydown", handler: deleteShape },
 	]);
 	mode = "select";
-	setModeButtonClasses(selectButton, [drawButton, moveButton])
+	setModeButtonClasses(selectButton, [drawButton, moveButton]);
 	if (shapesArray[selectedIndex]) {
 		shapesArray[selectedIndex].element.classList.add("shape--selected");
 	}
 };
 
 const moveMode = () => {
-	setCursorIcon('arrows-move.svg');
+	setCursorIcon("arrows-move.svg");
 	draggableAreaListenerState.removePrevListeners();
 	documentListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
-			{ eventType: "mousedown", handler: focusShape},
+			{ eventType: "mousedown", handler: focusShape },
 		]);
 	});
 	mode = "move";
@@ -152,12 +152,12 @@ const moveMode = () => {
 	if (shapesArray[selectedIndex]) {
 		shapesArray[selectedIndex].element.classList.remove("shape--selected");
 	}
-}
+};
 
 // Mode selection listeners
 drawButton.addEventListener("click", drawMode);
 selectButton.addEventListener("click", selectMode);
-moveButton.addEventListener("click", moveMode)
+moveButton.addEventListener("click", moveMode);
 
 // Call function to apply drawMode on page load
 drawMode();
