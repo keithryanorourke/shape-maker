@@ -153,7 +153,7 @@ const moveShape = (e) => {
 	const newX = sizeToString(startingShapePos.getX() + e.clientX - startingCursorPosition.getX(), 'px')
 	const newY = sizeToString(startingShapePos.getY() + e.clientY - startingCursorPosition.getY(), 'px')
 	currentShapePos.setX(stringToSize(newX));
-	currentShapePo.setY(stringToSize(newY))
+	currentShapePos.setY(stringToSize(newY));
 	shapeEl.style.left = newX;
 	shapeEl.style.top = newY;
 }
