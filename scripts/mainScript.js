@@ -65,7 +65,6 @@ const createNewShape = (clientX, clientY) => {
 // DRAW MODE HANDLERS
 // onClick for draggable area, creates new div and appends to draggable area. This function is unique to Draw mode.
 const clickNewShape = (e) => {
-	console.log(e);
 	// Redirect to touch handler if event type was touch
 	if (e.touches) {
 		touchNewShape(e);
@@ -86,7 +85,6 @@ const clickNewShape = (e) => {
 const touchNewShape = (e) => {
 	e.preventDefault();
 	const touchCoordinates = e.targetTouches[0];
-	console.log(touchCoordinates);
 	if (e.touches.length > 1) {
 		draggableAreaListenerState.removeListener(
 			"touchmove",
@@ -130,8 +128,12 @@ const sizeShapeMath = (shape, clientX, clientY) => {
 const sizeNewShapeTouch = (e) => {
 	e.preventDefault();
 	const currentShapeEl = shapesArray[shapeIndex].element;
-	const currentTouchCoords = e.touches[0]
-	sizeShapeMath(currentShapeEl, parseInt(currentTouchCoords.clientX), parseInt(currentTouchCoords.clientY))
+	const currentTouchCoords = e.touches[0];
+	sizeShapeMath(
+		currentShapeEl,
+		parseInt(currentTouchCoords.clientX),
+		parseInt(currentTouchCoords.clientY)
+	);
 };
 
 // mousemove handler for draggable area, updates size of new shape div until mouse is released.
@@ -210,18 +212,22 @@ const currentShapePos = new PositionCoordinates();
 
 // MOVE MODE HANDLERS
 // Focus specific shape to move when clicked on
-const clickShape = (e) => {
-	selectedIndex = findShape(e.target);
-	const shapeEl = e.target;
-	// Maybe make these two lines of code into a function?
+const grabShape = (shapeEl, clientX, clientY) => {
 	borderThickness = stringToSize(shapeEl.style.borderWidth);
 	preview.style.borderWidth = sizeToString(borderThickness, "px");
-	startingCursorPosition.setX(e.clientX);
-	startingCursorPosition.setY(e.clientY);
+	startingCursorPosition.setX(clientX);
+	startingCursorPosition.setY(clientY);
 	startingShapePos.setX(stringToSize(shapeEl.style.left));
 	startingShapePos.setY(stringToSize(shapeEl.style.top));
 	currentShapePos.setX(stringToSize(shapeEl.style.left));
 	currentShapePos.setY(stringToSize(shapeEl.style.top));
+};
+
+const clickShape = (e) => {
+	selectedIndex = findShape(e.target);
+	const shapeEl = e.target;
+	// Maybe make these two lines of code into a function?
+	grabShape(shapeEl, e.clientX, e.clientY);
 	draggableAreaListenerState.addListener({
 		eventType: "mousemove",
 		handler: moveShapeMouse,
@@ -232,24 +238,71 @@ const clickShape = (e) => {
 	});
 };
 
-// Update x/y co-ordinates of shape based on cursor movement
-const moveShapeMouse = (e) => {
-	const shapeEl = shapesArray[selectedIndex].element;
+const touchShape = (e) => {
+	e.preventDefault();
+	console.log(e);
+	if (e.touches > 1) {
+		draggableAreaListenerState.removeListener({
+			eventType: "touchmove",
+			handler: moveShapeTouch,
+		});
+		draggableAreaListenerState.removeListener({
+			eventType: "touchend",
+			handler: releaseShapeTouch,
+		});
+		return;
+	}
+	selectedIndex = findShape(e.target);
+	const shapeEl = e.target;
+	const touchCoordinates = e.touches[0];
+	grabShape(
+		shapeEl,
+		parseInt(touchCoordinates.clientX),
+		parseInt(touchCoordinates.clientY)
+	);
+	draggableAreaListenerState.addListener({
+		eventType: "touchmove",
+		handler: moveShapeTouch,
+	});
+	draggableAreaListenerState.addListener({
+		eventType: "touchend",
+		handler: releaseShapeTouch,
+	});
+};
+
+const movementMath = (shapeEl, clientX, clientY) => {
 	const newX = sizeToString(
-		startingShapePos.getX() + e.clientX - startingCursorPosition.getX(),
+		startingShapePos.getX() + clientX - startingCursorPosition.getX(),
 		"px"
 	);
 	const newY = sizeToString(
-		startingShapePos.getY() + e.clientY - startingCursorPosition.getY(),
+		startingShapePos.getY() + clientY - startingCursorPosition.getY(),
 		"px"
 	);
 	currentShapePos.setX(stringToSize(newX));
 	currentShapePos.setY(stringToSize(newY));
 	shapeEl.style.left = newX;
 	shapeEl.style.top = newY;
+};
+
+// Update x/y co-ordinates of shape based on cursor movement
+const moveShapeMouse = (e) => {
+	const shapeEl = shapesArray[selectedIndex].element;
+	movementMath(shapeEl, e.clientX, e.clientY);
+	// Fallback to remove listeners if mouseup is not registered in browser
 	if (!e.buttons) {
 		releaseShapeMouse(e);
 	}
+};
+
+const moveShapeTouch = (e) => {
+	const shapeEl = shapesArray[selectedIndex].element;
+	const touchCoordinates = e.touches[0];
+	movementMath(
+		shapeEl,
+		parseInt(touchCoordinates.clientX),
+		parseInt(touchCoordinates.clientY)
+	);
 };
 
 const releaseShapeMouse = (e) => {
@@ -260,6 +313,17 @@ const releaseShapeMouse = (e) => {
 	draggableAreaListenerState.removeListener({
 		eventType: "mouseup",
 		handler: releaseShapeMouse,
+	});
+};
+
+const releaseShapeTouch = (e) => {
+	draggableAreaListenerState.removeListener({
+		eventType: "touchmove",
+		handler: moveShapeTouch,
+	});
+	draggableAreaListenerState.removeListener({
+		eventType: "touchend",
+		handler: releaseShapeTouch,
 	});
 };
 
