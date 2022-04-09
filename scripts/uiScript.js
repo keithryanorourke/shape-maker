@@ -45,6 +45,18 @@ shapeButtons.forEach((button) => {
 const borderPlus = document.getElementById("borderPlus");
 const borderMinus = document.getElementById("borderMinus");
 
+// Make delete button for select mode
+const deleteContainer = document.createElement("div");
+deleteContainer.className = "controls__container";
+const deleteButton = document.createElement("button");
+deleteButton.addEventListener("click", deleteShape);
+deleteButton.className = "button";
+const deleteIcon = document.createElement("img");
+deleteIcon.setAttribute("src", "./assets/icons/delete.svg");
+deleteIcon.setAttribute("alt", "Trash bin icon.");
+deleteContainer.appendChild(deleteButton);
+deleteButton.appendChild(deleteIcon);
+
 // Button events
 borderPlus.addEventListener("mousedown", () => {
 	releaseBorderButton = false;
@@ -88,46 +100,83 @@ borderMinus.addEventListener("mouseup", () => {
 	releaseBorderButton = true;
 });
 
+// Mode selection buttons
+const drawButton = document.getElementById("draw");
+const selectButton = document.getElementById("select");
+const moveButton = document.getElementById("move");
+
+const setModeButtonClasses = (activeButton, otherButtons) => {
+	activeButton.className = "button button--selected";
+	otherButtons.forEach((button) => {
+		button.className = "button";
+	});
+};
+
+const setCursorIcon = (fileName) => {
+	draggableArea.style.cursor = `url(./assets/icons/${fileName}), auto`;
+};
+
 const drawMode = () => {
+	setCursorIcon("pencil.svg");
 	documentListenerState.removePrevListeners();
+	draggableAreaListenerState.removePrevListeners();
+	deleteContainer.remove();
 	shapesArray.forEach((shape) => {
 		shape.removePrevListeners();
 	});
 	draggableAreaListenerState.applyModeListeners([
-		{ eventType: "mousedown", handler: createNewShape },
-		{ eventType: "mouseup", handler: releaseNewShape },
+		{ eventType: "mousedown", handler: clickNewShape },
+		{ eventType: "touchstart", handler: touchNewShape },
 	]);
 	mode = "draw";
-	drawButton.className = "button button--selected";
-	selectButton.className = "button";
+	setModeButtonClasses(drawButton, [selectButton, moveButton]);
 	if (shapesArray[selectedIndex]) {
 		shapesArray[selectedIndex].element.classList.remove("shape--selected");
 	}
 };
 
+const footer = document.querySelector("footer");
 const selectMode = () => {
+	footer.appendChild(deleteContainer);
+	setCursorIcon("hand-index.svg");
+	draggableAreaListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
 			{ eventType: "click", handler: shapeClickHandler },
 		]);
 	});
-	draggableAreaListenerState.removePrevListeners();
 	documentListenerState.applyModeListeners([
 		{ eventType: "keydown", handler: deleteShape },
 	]);
 	mode = "select";
-	drawButton.className = "button";
-	selectButton.className = "button button--selected";
+	setModeButtonClasses(selectButton, [drawButton, moveButton]);
 	if (shapesArray[selectedIndex]) {
 		shapesArray[selectedIndex].element.classList.add("shape--selected");
 	}
 };
 
-// Call function to apply drawMode on page load
-drawMode();
+const moveMode = () => {
+	setCursorIcon("arrows-move.svg");
+	draggableAreaListenerState.removePrevListeners();
+	documentListenerState.removePrevListeners();
+	deleteContainer.remove();
+	shapesArray.forEach((shape) => {
+		shape.applyModeListeners([
+			{ eventType: "mousedown", handler: clickShape },
+			{ eventType: "touchstart", handler: touchShape },
+		]);
+	});
+	mode = "move";
+	setModeButtonClasses(moveButton, [selectButton, drawButton]);
+	if (shapesArray[selectedIndex]) {
+		shapesArray[selectedIndex].element.classList.remove("shape--selected");
+	}
+};
 
 // Mode selection listeners
-const drawButton = document.getElementById("draw");
-const selectButton = document.getElementById("select");
 drawButton.addEventListener("click", drawMode);
 selectButton.addEventListener("click", selectMode);
+moveButton.addEventListener("click", moveMode);
+
+// Call function to apply drawMode on page load
+drawMode();
