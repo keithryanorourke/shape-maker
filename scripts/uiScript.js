@@ -125,8 +125,8 @@ const drawMode = () => {
 		shape.removePrevListeners();
 	});
 	draggableAreaListenerState.applyModeListeners([
-		{ eventType: "mousedown", handler: clickNewShape },
-		{ eventType: "touchstart", handler: touchNewShape },
+		new ListenerObject("mousedown", clickNewShape),
+		new ListenerObject("touchstart", touchNewShape),
 	]);
 	mode = "draw";
 	setModeButtonClasses(drawButton, [selectButton, moveButton]);
@@ -142,11 +142,11 @@ const selectMode = () => {
 	draggableAreaListenerState.removePrevListeners();
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
-			{ eventType: "click", handler: shapeClickHandler },
+			new ListenerObject("click", shapeClickHandler),
 		]);
 	});
 	documentListenerState.applyModeListeners([
-		{ eventType: "keydown", handler: deleteShape },
+		new ListenerObject("keydown", deleteShape),
 	]);
 	mode = "select";
 	setModeButtonClasses(selectButton, [drawButton, moveButton]);
@@ -162,8 +162,8 @@ const moveMode = () => {
 	deleteContainer.remove();
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
-			{ eventType: "mousedown", handler: clickShape },
-			{ eventType: "touchstart", handler: touchShape },
+			new ListenerObject("mousedown", clickShape),
+			new ListenerObject("touchstart", touchShape)
 		]);
 	});
 	mode = "move";
