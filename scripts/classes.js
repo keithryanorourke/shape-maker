@@ -39,31 +39,6 @@ class ElementListenerState {
 		this.setCurrentListeners([]);
 	}
 
-	/**
-	 *
-	 * @param {*} listener
-	 * @returns {number} Error code 404 will be returned if listener is not registered, nothing will be returned if method was successful.
-	 */
-	removeListener(listener) {
-		// Begin by comparing properties of listeners in list to passed in listener to validate it's registration
-		const listenerKeys = Object.keys(listener);
-		const listenerIndex = this.currentListeners.findIndex((listenerInArr) =>
-			compareObjectKeyValues(listenerInArr, listener, listenerKeys)
-		);
-		// Return error code if passed in listener is not registered with list
-		if (listenerIndex === -1) {
-			console.warn(
-				`Listener to be removed is not currently registered in list! The listener cannot be removed. \n${listener.eventType}`
-			);
-			return 404;
-		}
-		// Remove listener from DOM element and then update registered list in state
-		this.element.removeEventListener(listener.eventType, listener.handler);
-		const splicedListeners = this.getCurrentListeners();
-		splicedListeners.splice(listenerIndex, 1);
-		this.setCurrentListeners(splicedListeners);
-	}
-
 	removeListenerType(type) {
 		const currentListeners = this.getCurrentListeners();
 		const listenersToRemove = currentListeners.filter(

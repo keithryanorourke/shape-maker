@@ -55,7 +55,7 @@ deleteContainer.appendChild(deleteButton);
 deleteButton.appendChild(deleteIcon);
 
 const releaseBorderBtn = (_e, buttonState, interval) => {
-	console.log("RELEASE")
+	console.log("RELEASE");
 	clearInterval(interval);
 	buttonState.removeListenerType("mouseup");
 };
