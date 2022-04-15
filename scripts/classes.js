@@ -17,7 +17,7 @@ class ElementListenerState {
 		this.currentListeners = initialListeners || [];
 	}
 	/**
-	 * 
+	 *
 	 * @returns {[]} a copy array of currentListeners
 	 */
 	getCurrentListeners() {
@@ -33,7 +33,7 @@ class ElementListenerState {
 		prevListeners.forEach((listener) => {
 			this.element.removeEventListener(
 				listener.eventType,
-				listener.handler
+				listener.callback
 			);
 		});
 		this.setCurrentListeners([]);
@@ -47,16 +47,8 @@ class ElementListenerState {
 	removeListener(listener) {
 		// Begin by comparing properties of listeners in list to passed in listener to validate it's registration
 		const listenerKeys = Object.keys(listener);
-		const listenerIndex = this.currentListeners.findIndex(
-			(listenerInArr) => {
-				for (let i = 0; i < listenerKeys.length; i++) {
-					const key = listenerKeys[i];
-					if (listenerInArr[key] !== listener[key]) {
-						return false;
-					}
-				}
-				return true;
-			}
+		const listenerIndex = this.currentListeners.findIndex((listenerInArr) =>
+			compareObjectKeyValues(listenerInArr, listener, listenerKeys)
 		);
 		// Return error code if passed in listener is not registered with list
 		if (listenerIndex === -1) {
@@ -72,6 +64,26 @@ class ElementListenerState {
 		this.setCurrentListeners(splicedListeners);
 	}
 
+	removeListenerType(type) {
+		const currentListeners = this.getCurrentListeners();
+		const listenersToRemove = currentListeners.filter(
+			(listener) => listener.eventType === type
+		);
+		// if(!listenersToRemove.length) console.warn(`No listeners with type ${type} found.`)
+		listenersToRemove.forEach((listener) => {
+			this.element.removeEventListener(
+				listener.eventType,
+				listener.callback
+			);
+			currentListeners.splice(
+				currentListeners.findIndex((listenerInArr) =>
+					listenerInArr === listener
+				)
+			);
+		});
+		this.setCurrentListeners(currentListeners);
+	}
+
 	/**
 	 *
 	 * @param {object} listener
@@ -83,7 +95,7 @@ class ElementListenerState {
 			console.warn("Provided listener is already registered in list!");
 			return -1;
 		}
-		this.element.addEventListener(listener.eventType, listener.handler);
+		this.element.addEventListener(listener.eventType, listener.callback);
 		const newListeners = this.getCurrentListeners();
 		newListeners.push(listener);
 		this.setCurrentListeners(newListeners);
@@ -97,7 +109,10 @@ class ElementListenerState {
 		// Remove all previous listeners for fresh start
 		this.removePrevListeners();
 		listenersToAdd.forEach((listener) => {
-			this.element.addEventListener(listener.eventType, listener.handler);
+			this.element.addEventListener(
+				listener.eventType,
+				listener.callback
+			);
 		});
 		this.setCurrentListeners(listenersToAdd);
 	}
@@ -135,8 +150,7 @@ class ListenerObject {
 	 */
 	constructor(eventType, handler, args = []) {
 		this.eventType = eventType;
-		this.handler = handler;
-		this.args = args;
+		this.callback = (e) => handler(e, ...args);
 	}
 }
 

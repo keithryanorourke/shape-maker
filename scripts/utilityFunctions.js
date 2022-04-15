@@ -17,3 +17,14 @@ const stringToSize = (string) => {
 	const size = string.split("p")[0];
 	return Number(size);
 };
+
+
+const compareObjectKeyValues = (obj1, obj2, keys) => {
+		for (let i = 0; i < keys.length; i++) {
+			const key = keys[i];
+			if (obj1[key] !== obj2[key]) {
+				return false;
+			}
+		}
+		return true;
+}

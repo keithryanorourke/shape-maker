@@ -20,9 +20,6 @@ shapeButtonNames.forEach((name) => {
 const shapeButtonListener = (e, name) => {
 	formOfShape = name;
 	preview.className = `preview preview--${name}`;
-	if (mode === "select" && shapesArray[selectedIndex]) {
-		shapesArray[selectedIndex].element.className = `shape shape--${name}`;
-	}
 	shapeButtonNames.forEach((buttonName) => {
 		const currentButton = shapeButtons.find(
 			(button) => button.shapeName === buttonName
@@ -130,29 +127,16 @@ const drawMode = () => {
 	]);
 	mode = "draw";
 	setModeButtonClasses(drawButton, [selectButton, moveButton]);
-	if (shapesArray[selectedIndex]) {
-		shapesArray[selectedIndex].element.classList.remove("shape--selected");
-	}
+	removeSelected();
 };
 
 const footer = document.querySelector("footer");
 const selectMode = () => {
+	mode = "select";
 	footer.appendChild(deleteContainer);
 	setCursorIcon("hand-index.svg");
-	draggableAreaListenerState.removePrevListeners();
-	shapesArray.forEach((shape) => {
-		shape.applyModeListeners([
-			new ListenerObject("click", shapeClickHandler),
-		]);
-	});
-	documentListenerState.applyModeListeners([
-		new ListenerObject("keydown", deleteShape),
-	]);
-	mode = "select";
-	setModeButtonClasses(selectButton, [drawButton, moveButton]);
-	if (shapesArray[selectedIndex]) {
-		shapesArray[selectedIndex].element.classList.add("shape--selected");
-	}
+	const selectedShape = shapesArray[shapesArray.length - 1].element;
+	refreshSelectMode(selectedShape);
 };
 
 const moveMode = () => {
@@ -163,20 +147,41 @@ const moveMode = () => {
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
 			new ListenerObject("mousedown", clickShape),
-			new ListenerObject("touchstart", touchShape)
+			new ListenerObject("touchstart", touchShape),
 		]);
 	});
 	mode = "move";
 	setModeButtonClasses(moveButton, [selectButton, drawButton]);
-	if (shapesArray[selectedIndex]) {
-		shapesArray[selectedIndex].element.classList.remove("shape--selected");
-	}
+	removeSelected();
 };
 
 // Mode selection listeners
 drawButton.addEventListener("click", drawMode);
 selectButton.addEventListener("click", selectMode);
 moveButton.addEventListener("click", moveMode);
+
+const removeSelected = () => {
+	shapesArray.forEach((shape) =>
+		shape.element.classList.remove("shape--selected")
+	);
+};
+
+const refreshSelectMode = (selectedShape) => {
+	draggableAreaListenerState.removePrevListeners();
+	if (!selectedShape) {
+		return;
+	}
+	selectedShape.classList.add("shape--selected");
+	shapesArray.forEach((shape) => {
+		shape.applyModeListeners([
+			new ListenerObject("click", shapeClickHandler, [selectedShape]),
+		]);
+	});
+	documentListenerState.applyModeListeners([
+		new ListenerObject("keydown", deleteShape, [selectedShape]),
+	]);
+	setModeButtonClasses(selectButton, [drawButton, moveButton]);
+};
 
 // Call function to apply drawMode on page load
 drawMode();
