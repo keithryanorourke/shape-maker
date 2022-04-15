@@ -153,7 +153,6 @@ const finalizeShape = () => {
 };
 
 const releaseNewShapeTouch = (e) => {
-	console.log("Release new shape touch");
 	draggableAreaListenerState.removeListenerType("touchmove");
 	draggableAreaListenerState.removeListenerType("touchend");
 	finalizeShape();
@@ -161,7 +160,6 @@ const releaseNewShapeTouch = (e) => {
 
 // mouseup handler for draggable area, disables mousemove for draggable area and updated index for colorsArray and shapesArray
 const releaseNewShapeMouse = (e) => {
-	console.log("Release new shape mouse");
 	draggableAreaListenerState.removeListenerType("mousemove");
 	draggableAreaListenerState.removeListenerType("mouseup");
 	finalizeShape();
@@ -291,7 +289,6 @@ const moveShapeTouch = (e, currentShapeEl, allCoordinates) => {
 };
 
 const releaseShapeMouse = (e) => {
-	console.log("Release move mouse");
 	draggableAreaListenerState.removeListenerType("mousemove");
 	draggableAreaListenerState.removeListenerType("mouseup");
 };
