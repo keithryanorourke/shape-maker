@@ -14,7 +14,6 @@ const colorArray = [
 	"#00BBFF",
 	"#FF00FF",
 ];
-let colorIndex = 0;
 
 const draggableArea = document.querySelector(".drawing-area");
 
@@ -43,6 +42,7 @@ const createNewShape = (clientX, clientY) => {
 		document.createElement("div")
 	);
 	shapesArray.push(newShapeListenerState);
+	const colorIndex = ((shapesArray.length % colorArray.length) || colorArray.length) - 1;
 	const newShapeEl = newShapeListenerState.element;
 	// Add necessary classes and styles to new DOM element and print it on the page
 	newShapeEl.className = `shape shape--${formOfShape}`;
@@ -150,10 +150,7 @@ const sizeNewShapeMouse = (e) => {
 const finalizeShape = () => {
 	sortShapesBySize(shapesArray);
 	// Cycle through color array and change preview color
-	colorIndex++;
-	if (colorIndex >= colorArray.length) {
-		colorIndex = 0;
-	}
+	const colorIndex = shapesArray.length % colorArray.length;
 	preview.style.borderColor = colorArray[colorIndex];
 	// Move on to next shape
 	shapeIndex++;
