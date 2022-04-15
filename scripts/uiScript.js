@@ -1,6 +1,6 @@
 // Grab preview element
 const preview = document.getElementById("preview");
-// Grab all shape buttons and add eventlisteners
+// Grab all shape buttons and make listener state for them.
 const shapeButtonNames = [
 	"square",
 	"circle",
@@ -55,6 +55,7 @@ deleteContainer.appendChild(deleteButton);
 deleteButton.appendChild(deleteIcon);
 
 const releaseBorderBtn = (_e, buttonState, interval) => {
+	console.log("RELEASE")
 	clearInterval(interval);
 	buttonState.removeListenerType("mouseup");
 };

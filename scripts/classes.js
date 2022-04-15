@@ -76,8 +76,8 @@ class ElementListenerState {
 				listener.callback
 			);
 			currentListeners.splice(
-				currentListeners.findIndex((listenerInArr) =>
-					listenerInArr === listener
+				currentListeners.findIndex(
+					(listenerInArr) => listenerInArr === listener
 				)
 			);
 		});
@@ -176,5 +176,10 @@ class PositionCoordinates {
 
 	setY(num) {
 		this.y = num;
+	}
+
+	setXandY(x, y) {
+		this.x = x;
+		this.y = y;
 	}
 }
