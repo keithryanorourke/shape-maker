@@ -42,7 +42,8 @@ const createNewShape = (clientX, clientY) => {
 		document.createElement("div")
 	);
 	shapesArray.push(newShapeListenerState);
-	const colorIndex = ((shapesArray.length % colorArray.length) || colorArray.length) - 1;
+	const colorIndex =
+		(shapesArray.length % colorArray.length || colorArray.length) - 1;
 	const newShapeEl = newShapeListenerState.element;
 	// Add necessary classes and styles to new DOM element and print it on the page
 	newShapeEl.className = `shape shape--${formOfShape}`;
@@ -72,14 +73,12 @@ const clickNewShape = (e) => {
 	}
 	// create new shape and add mouse listeners
 	createNewShape(e.clientX, e.clientY);
-	draggableAreaListenerState.addListener({
-		eventType: "mousemove",
-		handler: sizeNewShapeMouse,
-	});
-	draggableAreaListenerState.addListener({
-		eventType: "mouseup",
-		handler: releaseNewShapeMouse,
-	});
+	draggableAreaListenerState.addListener(
+		new ListenerObject("mousemove", sizeNewShapeMouse)
+	);
+	draggableAreaListenerState.addListener(
+		new ListenerObject("mouseup", releaseNewShapeMouse)
+	);
 };
 
 const touchNewShape = (e) => {
@@ -97,14 +96,12 @@ const touchNewShape = (e) => {
 		parseInt(touchCoordinates.clientX),
 		parseInt(touchCoordinates.clientY)
 	);
-	draggableAreaListenerState.addListener({
-		eventType: "touchmove",
-		handler: sizeNewShapeTouch,
-	});
-	draggableAreaListenerState.addListener({
-		eventType: "touchend",
-		handler: releaseNewShapeTouch,
-	});
+	draggableAreaListenerState.addListener(
+		new ListenerObject("touchmove", sizeNewShapeTouch)
+	);
+	draggableAreaListenerState.addListener(
+		new ListenerObject("touchend", releaseNewShapeTouch)
+	);
 };
 
 const sizeShapeMath = (shape, clientX, clientY) => {
@@ -225,14 +222,12 @@ const clickShape = (e) => {
 	const shapeEl = e.target;
 	// Maybe make these two lines of code into a function?
 	grabShape(shapeEl, e.clientX, e.clientY);
-	draggableAreaListenerState.addListener({
-		eventType: "mousemove",
-		handler: moveShapeMouse,
-	});
-	draggableAreaListenerState.addListener({
-		eventType: "mouseup",
-		handler: releaseShapeMouse,
-	});
+	draggableAreaListenerState.addListener(
+		new ListenerObject("mousemove", moveShapeMouse)
+	);
+	draggableAreaListenerState.addListener(
+		new ListenerObject("mouseup", releaseShapeMouse)
+	);
 };
 
 const touchShape = (e) => {
@@ -256,14 +251,8 @@ const touchShape = (e) => {
 		parseInt(touchCoordinates.clientX),
 		parseInt(touchCoordinates.clientY)
 	);
-	draggableAreaListenerState.addListener({
-		eventType: "touchmove",
-		handler: moveShapeTouch,
-	});
-	draggableAreaListenerState.addListener({
-		eventType: "touchend",
-		handler: releaseShapeTouch,
-	});
+	draggableAreaListenerState.addListener(new ListenerObject("touchmove", moveShapeTouch))
+	draggableAreaListenerState.addListener(new ListenerObject("touchend", releaseShapeTouch))
 };
 
 const movementMath = (shapeEl, clientX, clientY) => {

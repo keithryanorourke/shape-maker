@@ -16,7 +16,10 @@ class ElementListenerState {
 		this.element = element;
 		this.currentListeners = initialListeners || [];
 	}
-
+	/**
+	 * 
+	 * @returns {[]} a copy array of currentListeners
+	 */
 	getCurrentListeners() {
 		return [...this.currentListeners];
 	}
@@ -120,6 +123,20 @@ class ElementListenerState {
 			"There is already a DOM element registered to this ListenerState. If you wish to overwrite said element, pass true as the second argument in this method for a hard fix."
 		);
 		return 400;
+	}
+}
+
+class ListenerObject {
+	/**
+	 *
+	 * @param {string} eventType represents the type of event listener
+	 * @param {function} handler callback function for event listener
+	 * @param {[]} args Array of arguments (in proper order) for callback function, defaults to empty array
+	 */
+	constructor(eventType, handler, args = []) {
+		this.eventType = eventType;
+		this.handler = handler;
+		this.args = args;
 	}
 }
 
