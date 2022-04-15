@@ -144,9 +144,9 @@ class ElementListenerState {
 class ListenerObject {
 	/**
 	 *
-	 * @param {string} eventType represents the type of event listener
-	 * @param {function} handler callback function for event listener
-	 * @param {[]} args Array of arguments (in proper order) for callback function, defaults to empty array
+	 * @param {string} eventType - represents the type of event listener
+	 * @param {function} handler - callback function for event listener
+	 * @param {[]} args - Array of arguments (in proper order) for callback function, defaults to empty array
 	 */
 	constructor(eventType, handler, args = []) {
 		this.eventType = eventType;

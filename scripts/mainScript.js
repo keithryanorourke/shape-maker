@@ -1,6 +1,4 @@
 const shapesArray = [];
-let shapeIndex = 0;
-let selectedIndex = 0;
 let borderThickness = 5;
 const startingCursorPosition = new PositionCoordinates();
 let releaseBorderButton = false;
@@ -52,7 +50,6 @@ const createNewShape = (clientX, clientY) => {
 	}`;
 	newShapeEl.style.zIndex = shapesArray.length + 1;
 	draggableArea.appendChild(newShapeEl);
-	selectedIndex = shapeIndex;
 	// Set initial values for position of shape
 	startingCursorPosition.setX(clientX);
 	startingCursorPosition.setY(clientY);
@@ -141,8 +138,6 @@ const finalizeShape = () => {
 	// Cycle through color array and change preview color
 	const colorIndex = shapesArray.length % colorArray.length;
 	preview.style.borderColor = colorArray[colorIndex];
-	// Move on to next shape
-	shapeIndex++;
 };
 
 const releaseNewShapeTouch = (e) => {
@@ -200,7 +195,6 @@ const grabShape = (shapeEl, clientX, clientY) => {
 };
 
 const clickShape = (e) => {
-	selectedIndex = findShape(e.target);
 	const shapeEl = e.target;
 	// Maybe make these two lines of code into a function?
 	grabShape(shapeEl, e.clientX, e.clientY);
@@ -219,7 +213,6 @@ const touchShape = (e) => {
 		draggableAreaListenerState.removeListenerType("touchend")
 		return;
 	}
-	selectedIndex = findShape(e.target);
 	const shapeEl = e.target;
 	const touchCoordinates = e.touches[0];
 	grabShape(
