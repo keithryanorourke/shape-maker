@@ -68,10 +68,6 @@ const createNewShape = (clientX, clientY) => {
 // onClick for draggable area, creates new div and appends to draggable area. This function is unique to Draw mode.
 const clickNewShape = (e) => {
 	// Redirect to touch handler if event type was touch
-	if (e.touches) {
-		touchNewShape(e);
-		return;
-	}
 	// create new shape and add mouse listeners
 	const currentShapeEl = createNewShape(e.clientX, e.clientY);
 	draggableAreaListenerState.addListener(
@@ -264,6 +260,10 @@ const moveShapeMouse = (e, currentShapeEl) => {
 };
 
 const moveShapeTouch = (e, currentShapeEl) => {
+	if (e.touches.length > 1) {
+		draggableAreaListenerState.removeListenerType("touchmove");
+		return;
+	}
 	const touchCoordinates = e.touches[0];
 	movementMath(
 		currentShapeEl,
