@@ -16,7 +16,10 @@ class ElementListenerState {
 		this.element = element;
 		this.currentListeners = initialListeners || [];
 	}
-
+	/**
+	 *
+	 * @returns {[]} a copy array of currentListeners
+	 */
 	getCurrentListeners() {
 		return [...this.currentListeners];
 	}
@@ -30,43 +33,30 @@ class ElementListenerState {
 		prevListeners.forEach((listener) => {
 			this.element.removeEventListener(
 				listener.eventType,
-				listener.handler
+				listener.callback
 			);
 		});
 		this.setCurrentListeners([]);
 	}
 
-	/**
-	 *
-	 * @param {*} listener
-	 * @returns {number} Error code 404 will be returned if listener is not registered, nothing will be returned if method was successful.
-	 */
-	removeListener(listener) {
-		// Begin by comparing properties of listeners in list to passed in listener to validate it's registration
-		const listenerKeys = Object.keys(listener);
-		const listenerIndex = this.currentListeners.findIndex(
-			(listenerInArr) => {
-				for (let i = 0; i < listenerKeys.length; i++) {
-					const key = listenerKeys[i];
-					if (listenerInArr[key] !== listener[key]) {
-						return false;
-					}
-				}
-				return true;
-			}
+	removeListenerType(type) {
+		const currentListeners = this.getCurrentListeners();
+		const listenersToRemove = currentListeners.filter(
+			(listener) => listener.eventType === type
 		);
-		// Return error code if passed in listener is not registered with list
-		if (listenerIndex === -1) {
-			console.warn(
-				`Listener to be removed is not currently registered in list! The listener cannot be removed. \n${listener.eventType}`
+		// if(!listenersToRemove.length) console.warn(`No listeners with type ${type} found.`)
+		listenersToRemove.forEach((listener) => {
+			this.element.removeEventListener(
+				listener.eventType,
+				listener.callback
 			);
-			return 404;
-		}
-		// Remove listener from DOM element and then update registered list in state
-		this.element.removeEventListener(listener.eventType, listener.handler);
-		const splicedListeners = this.getCurrentListeners();
-		splicedListeners.splice(listenerIndex, 1);
-		this.setCurrentListeners(splicedListeners);
+			currentListeners.splice(
+				currentListeners.findIndex(
+					(listenerInArr) => listenerInArr === listener
+				)
+			);
+		});
+		this.setCurrentListeners(currentListeners);
 	}
 
 	/**
@@ -80,7 +70,7 @@ class ElementListenerState {
 			console.warn("Provided listener is already registered in list!");
 			return -1;
 		}
-		this.element.addEventListener(listener.eventType, listener.handler);
+		this.element.addEventListener(listener.eventType, listener.callback);
 		const newListeners = this.getCurrentListeners();
 		newListeners.push(listener);
 		this.setCurrentListeners(newListeners);
@@ -94,7 +84,10 @@ class ElementListenerState {
 		// Remove all previous listeners for fresh start
 		this.removePrevListeners();
 		listenersToAdd.forEach((listener) => {
-			this.element.addEventListener(listener.eventType, listener.handler);
+			this.element.addEventListener(
+				listener.eventType,
+				listener.callback
+			);
 		});
 		this.setCurrentListeners(listenersToAdd);
 	}
@@ -123,6 +116,19 @@ class ElementListenerState {
 	}
 }
 
+class ListenerObject {
+	/**
+	 *
+	 * @param {string} eventType - represents the type of event listener
+	 * @param {function} handler - callback function for event listener
+	 * @param {[]} args - Array of arguments (in proper order) for callback function, defaults to empty array
+	 */
+	constructor(eventType, handler, args = []) {
+		this.eventType = eventType;
+		this.callback = (e) => handler(e, ...args);
+	}
+}
+
 // This class is intended for objects that need to keep track of some type of x/y coordinates globally
 // Avoid using if you only need a snapshot of x/y coordinates
 class PositionCoordinates {
@@ -145,5 +151,10 @@ class PositionCoordinates {
 
 	setY(num) {
 		this.y = num;
+	}
+
+	setXandY(x, y) {
+		this.x = x;
+		this.y = y;
 	}
 }

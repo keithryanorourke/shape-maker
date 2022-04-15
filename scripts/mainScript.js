@@ -1,10 +1,5 @@
 const shapesArray = [];
-let shapeIndex = 0;
-let selectedIndex = 0;
 let borderThickness = 5;
-const startingCursorPosition = new PositionCoordinates();
-let releaseBorderButton = false;
-let mode = "draw";
 let formOfShape = "square";
 const colorArray = [
 	"#FF0000",
@@ -14,12 +9,13 @@ const colorArray = [
 	"#00BBFF",
 	"#FF00FF",
 ];
-let colorIndex = 0;
 
-const draggableArea = document.querySelector(".drawing-area");
+const header = document.querySelector('header')
 
 const documentListenerState = new ElementListenerState(document);
-const draggableAreaListenerState = new ElementListenerState(draggableArea);
+const draggableAreaListenerState = new ElementListenerState(
+	document.querySelector(".drawing-area")
+);
 
 // Takes array of shape objects and makes a sorted copy to apply sorted z-index
 const sortShapesBySize = (arr) => {
@@ -43,6 +39,8 @@ const createNewShape = (clientX, clientY) => {
 		document.createElement("div")
 	);
 	shapesArray.push(newShapeListenerState);
+	const colorIndex =
+		(shapesArray.length % colorArray.length || colorArray.length) - 1;
 	const newShapeEl = newShapeListenerState.element;
 	// Add necessary classes and styles to new DOM element and print it on the page
 	newShapeEl.className = `shape shape--${formOfShape}`;
@@ -50,97 +48,97 @@ const createNewShape = (clientX, clientY) => {
 		colorArray[colorIndex]
 	}`;
 	newShapeEl.style.zIndex = shapesArray.length + 1;
-	draggableArea.appendChild(newShapeEl);
-	selectedIndex = shapeIndex;
+	draggableAreaListenerState.element.appendChild(newShapeEl);
 	// Set initial values for position of shape
-	startingCursorPosition.setX(clientX);
-	startingCursorPosition.setY(clientY);
-	newShapeEl.style.top = sizeToString(
-		startingCursorPosition.getY() - 80,
-		"px"
-	);
-	newShapeEl.style.left = sizeToString(startingCursorPosition.getX(), "px");
+	newShapeEl.style.left = sizeToString(clientX, "px");
+	newShapeEl.style.top = sizeToString(clientY - header.clientHeight, "px");
+	return newShapeEl;
 };
 
 // DRAW MODE HANDLERS
 // onClick for draggable area, creates new div and appends to draggable area. This function is unique to Draw mode.
 const clickNewShape = (e) => {
-	// Redirect to touch handler if event type was touch
-	if (e.touches) {
-		touchNewShape(e);
-		return;
-	}
 	// create new shape and add mouse listeners
-	createNewShape(e.clientX, e.clientY);
-	draggableAreaListenerState.addListener({
-		eventType: "mousemove",
-		handler: sizeNewShapeMouse,
-	});
-	draggableAreaListenerState.addListener({
-		eventType: "mouseup",
-		handler: releaseNewShapeMouse,
-	});
+	const startingPosition = new PositionCoordinates(e.clientX, e.clientY);
+	const currentShapeEl = createNewShape(
+		startingPosition.getX(),
+		startingPosition.getY()
+	);
+	draggableAreaListenerState.addListener(
+		new ListenerObject("mousemove", sizeNewShapeMouse, [
+			currentShapeEl,
+			startingPosition,
+		])
+	);
+	draggableAreaListenerState.addListener(
+		new ListenerObject("mouseup", releaseNewShapeMouse)
+	);
 };
 
 const touchNewShape = (e) => {
 	e.preventDefault();
 	const touchCoordinates = e.targetTouches[0];
+	const startingPosition = new PositionCoordinates(
+		touchCoordinates.clientX,
+		touchCoordinates.clientY
+	);
 	if (e.touches.length > 1) {
-		draggableAreaListenerState.removeListener(
-			"touchmove",
-			sizeNewShapeTouch
-		);
+		draggableAreaListenerState.removeListenerType("touchmove");
 		return;
 	}
 	// Create new shape and add touch listeners
-	createNewShape(
-		parseInt(touchCoordinates.clientX),
-		parseInt(touchCoordinates.clientY)
+	const currentShapeEl = createNewShape(
+		parseInt(startingPosition.getX()),
+		parseInt(startingPosition.getY())
 	);
-	draggableAreaListenerState.addListener({
-		eventType: "touchmove",
-		handler: sizeNewShapeTouch,
-	});
-	draggableAreaListenerState.addListener({
-		eventType: "touchend",
-		handler: releaseNewShapeTouch,
-	});
+	draggableAreaListenerState.addListener(
+		new ListenerObject("touchmove", sizeNewShapeTouch, [
+			currentShapeEl,
+			startingPosition,
+		])
+	);
+	draggableAreaListenerState.addListener(
+		new ListenerObject("touchend", releaseNewShapeTouch)
+	);
 };
 
-const sizeShapeMath = (shape, clientX, clientY) => {
+const sizeShapeMath = (shape, oldCoords, newCoords) => {
+	clientX = parseInt(newCoords.getX());
+	clientY = parseInt(newCoords.getY());
 	shape.style.width = sizeToString(
-		Math.abs(clientX - startingCursorPosition.getX()),
+		Math.abs(clientX - oldCoords.getX()),
 		"px"
 	);
 	shape.style.height = sizeToString(
-		Math.abs(clientY - startingCursorPosition.getY()),
+		Math.abs(clientY - oldCoords.getY()),
 		"px"
 	);
 	// Handling for cases where user drags up or left
-	if (clientX < startingCursorPosition.getX()) {
+	if (clientX < oldCoords.getX()) {
 		shape.style.left = clientX.toString() + "px";
 	}
-	if (clientY < startingCursorPosition.getY()) {
+	if (clientY < oldCoords.getY()) {
 		shape.style.top = (clientY - 80).toString() + "px";
 	}
 };
 
-const sizeNewShapeTouch = (e) => {
+const sizeNewShapeTouch = (e, currentShapeEl, startingPosition) => {
 	e.preventDefault();
-	const currentShapeEl = shapesArray[shapeIndex].element;
-	const currentTouchCoords = e.touches[0];
-	sizeShapeMath(
-		currentShapeEl,
-		parseInt(currentTouchCoords.clientX),
-		parseInt(currentTouchCoords.clientY)
+	const currentTouchCoords = new PositionCoordinates(
+		e.touches[0].clientX,
+		e.touches[0].clientY
 	);
+	sizeShapeMath(currentShapeEl, startingPosition, currentTouchCoords);
 };
 
 // mousemove handler for draggable area, updates size of new shape div until mouse is released.
-const sizeNewShapeMouse = (e) => {
-	const currentShapeEl = shapesArray[shapeIndex].element;
+const sizeNewShapeMouse = (e, currentShapeEl, startingPosition) => {
 	// Resize shape based on cursor movement
-	sizeShapeMath(currentShapeEl, e.clientX, e.clientY);
+	sizeShapeMath(
+		currentShapeEl,
+		startingPosition,
+		new PositionCoordinates(e.clientX, e.clientY)
+	);
 	// Backup way to force call mouseup handler in case mouseup doesn't register
 	if (!e.buttons) {
 		releaseNewShapeMouse(e);
@@ -150,132 +148,115 @@ const sizeNewShapeMouse = (e) => {
 const finalizeShape = () => {
 	sortShapesBySize(shapesArray);
 	// Cycle through color array and change preview color
-	colorIndex++;
-	if (colorIndex >= colorArray.length) {
-		colorIndex = 0;
-	}
+	const colorIndex = shapesArray.length % colorArray.length;
 	preview.style.borderColor = colorArray[colorIndex];
-	// Move on to next shape
-	shapeIndex++;
 };
 
 const releaseNewShapeTouch = (e) => {
-	draggableAreaListenerState.removeListener({
-		eventType: "touchmove",
-		handler: sizeNewShapeTouch,
-	});
-	draggableAreaListenerState.removeListener({
-		eventType: "touchend",
-		handler: releaseNewShapeTouch,
-	});
+	draggableAreaListenerState.removeListenerType("touchmove");
+	draggableAreaListenerState.removeListenerType("touchend");
 	finalizeShape();
 };
 
 // mouseup handler for draggable area, disables mousemove for draggable area and updated index for colorsArray and shapesArray
 const releaseNewShapeMouse = (e) => {
-	draggableAreaListenerState.removeListener({
-		eventType: "mousemove",
-		handler: sizeNewShapeMouse,
-	});
-	draggableAreaListenerState.removeListener({
-		eventType: "mouseup",
-		handler: releaseNewShapeMouse,
-	});
+	draggableAreaListenerState.removeListenerType("mousemove");
+	draggableAreaListenerState.removeListenerType("mouseup");
 	finalizeShape();
 };
 
 // SELECT MODE HANDLERS
 // Take in clicked object and make it the selected object, update classList to reflect this change. This function is unique to select mode.
-const shapeClickHandler = (e) => {
+const shapeClickHandler = (e, selectedShape) => {
 	const shapeEl = e.target;
-	shapesArray[selectedIndex].element.classList.remove("shape--selected");
-	selectedIndex = findShape(e.target);
+	selectedShape.classList.remove("shape--selected");
 	shapeEl.classList.add("shape--selected");
 	borderThickness = stringToSize(shapeEl.style.borderWidth);
 	preview.style.borderWidth = sizeToString(borderThickness, "px");
+	refreshSelectMode(shapeEl);
 };
 
 // Delete key listener which deletes selected shape and calls functio to re-index event listeners
-const deleteShape = (e) => {
+const deleteShape = (e, selectedShape) => {
 	if (
 		(e.key === "Delete" || e.key === "Backspace" || e.type === "click") &&
-		shapesArray[selectedIndex]
+		selectedShape
 	) {
-		draggableArea.removeChild(shapesArray[selectedIndex].element);
-		shapesArray.splice(selectedIndex, 1);
-		reIndexShapes();
+		draggableAreaListenerState.element.removeChild(selectedShape);
+		shapesArray.splice(
+			shapesArray.findIndex((shape) => shape.element === selectedShape),
+			1
+		);
+		refreshSelectMode(shapesArray[shapesArray.length - 1].element);
 	}
 };
-
-const startingShapePos = new PositionCoordinates();
-const currentShapePos = new PositionCoordinates();
 
 // MOVE MODE HANDLERS
 // Focus specific shape to move when clicked on
 const grabShape = (shapeEl, clientX, clientY) => {
 	borderThickness = stringToSize(shapeEl.style.borderWidth);
 	preview.style.borderWidth = sizeToString(borderThickness, "px");
-	startingCursorPosition.setX(clientX);
-	startingCursorPosition.setY(clientY);
-	startingShapePos.setX(stringToSize(shapeEl.style.left));
-	startingShapePos.setY(stringToSize(shapeEl.style.top));
-	currentShapePos.setX(stringToSize(shapeEl.style.left));
-	currentShapePos.setY(stringToSize(shapeEl.style.top));
+	const cursorPosition = new PositionCoordinates(clientX, clientY);
+	const startingShapePos = new PositionCoordinates(
+		stringToSize(shapeEl.style.left),
+		stringToSize(shapeEl.style.top)
+	);
+	const currentShapePos = new PositionCoordinates(
+		startingShapePos.getX(),
+		startingShapePos.getY()
+	);
+	return { cursorPosition, startingShapePos, currentShapePos };
 };
 
 const clickShape = (e) => {
-	selectedIndex = findShape(e.target);
 	const shapeEl = e.target;
 	// Maybe make these two lines of code into a function?
-	grabShape(shapeEl, e.clientX, e.clientY);
-	draggableAreaListenerState.addListener({
-		eventType: "mousemove",
-		handler: moveShapeMouse,
-	});
-	draggableAreaListenerState.addListener({
-		eventType: "mouseup",
-		handler: releaseShapeMouse,
-	});
+	const allCoordinates = grabShape(shapeEl, e.clientX, e.clientY);
+	draggableAreaListenerState.addListener(
+		new ListenerObject("mousemove", moveShapeMouse, [
+			shapeEl,
+			allCoordinates,
+		])
+	);
+	draggableAreaListenerState.addListener(
+		new ListenerObject("mouseup", releaseShapeMouse)
+	);
 };
 
 const touchShape = (e) => {
 	e.preventDefault();
 	if (e.touches > 1) {
-		draggableAreaListenerState.removeListener({
-			eventType: "touchmove",
-			handler: moveShapeTouch,
-		});
-		draggableAreaListenerState.removeListener({
-			eventType: "touchend",
-			handler: releaseShapeTouch,
-		});
+		draggableAreaListenerState.removeListenerType("touchmove");
+		draggableAreaListenerState.removeListenerType("touchend");
 		return;
 	}
-	selectedIndex = findShape(e.target);
 	const shapeEl = e.target;
 	const touchCoordinates = e.touches[0];
-	grabShape(
+	const allCoordinates = grabShape(
 		shapeEl,
 		parseInt(touchCoordinates.clientX),
 		parseInt(touchCoordinates.clientY)
 	);
-	draggableAreaListenerState.addListener({
-		eventType: "touchmove",
-		handler: moveShapeTouch,
-	});
-	draggableAreaListenerState.addListener({
-		eventType: "touchend",
-		handler: releaseShapeTouch,
-	});
+	draggableAreaListenerState.addListener(
+		new ListenerObject("touchmove", moveShapeTouch, [
+			shapeEl,
+			allCoordinates,
+		])
+	);
+	draggableAreaListenerState.addListener(
+		new ListenerObject("touchend", releaseShapeTouch)
+	);
 };
 
-const movementMath = (shapeEl, clientX, clientY) => {
+const movementMath = (shapeEl, clientX, clientY, allCoordinates) => {
+	const { cursorPosition, startingShapePos, currentShapePos } =
+		allCoordinates;
 	const newX = sizeToString(
-		startingShapePos.getX() + clientX - startingCursorPosition.getX(),
+		startingShapePos.getX() + clientX - cursorPosition.getX(),
 		"px"
 	);
 	const newY = sizeToString(
-		startingShapePos.getY() + clientY - startingCursorPosition.getY(),
+		startingShapePos.getY() + clientY - cursorPosition.getY(),
 		"px"
 	);
 	currentShapePos.setX(stringToSize(newX));
@@ -285,57 +266,39 @@ const movementMath = (shapeEl, clientX, clientY) => {
 };
 
 // Update x/y co-ordinates of shape based on cursor movement
-const moveShapeMouse = (e) => {
-	const shapeEl = shapesArray[selectedIndex].element;
-	movementMath(shapeEl, e.clientX, e.clientY);
+const moveShapeMouse = (e, currentShapeEl, allCoordinates) => {
+	movementMath(currentShapeEl, e.clientX, e.clientY, allCoordinates);
 	// Fallback to remove listeners if mouseup is not registered in browser
 	if (!e.buttons) {
 		releaseShapeMouse(e);
 	}
 };
 
-const moveShapeTouch = (e) => {
-	const shapeEl = shapesArray[selectedIndex].element;
+const moveShapeTouch = (e, currentShapeEl, allCoordinates) => {
+	if (e.touches.length > 1) {
+		draggableAreaListenerState.removeListenerType("touchmove");
+		return;
+	}
 	const touchCoordinates = e.touches[0];
 	movementMath(
-		shapeEl,
+		currentShapeEl,
 		parseInt(touchCoordinates.clientX),
-		parseInt(touchCoordinates.clientY)
+		parseInt(touchCoordinates.clientY),
+		allCoordinates
 	);
 };
 
 const releaseShapeMouse = (e) => {
-	draggableAreaListenerState.removeListener({
-		eventType: "mousemove",
-		handler: moveShapeMouse,
-	});
-	draggableAreaListenerState.removeListener({
-		eventType: "mouseup",
-		handler: releaseShapeMouse,
-	});
+	draggableAreaListenerState.removeListenerType("mousemove");
+	draggableAreaListenerState.removeListenerType("mouseup");
 };
 
 const releaseShapeTouch = (e) => {
-	draggableAreaListenerState.removeListener({
-		eventType: "touchmove",
-		handler: moveShapeTouch,
-	});
-	draggableAreaListenerState.removeListener({
-		eventType: "touchend",
-		handler: releaseShapeTouch,
-	});
+	draggableAreaListenerState.removeListenerType("touchmove");
+	draggableAreaListenerState.removeListenerType("touchend");
 };
 
 // Function to re-index event listeners on all elements of shapesArray and reset all related index variables
-const reIndexShapes = () => {
-	shapeIndex = shapesArray.length;
-	if (!shapeIndex) {
-		return;
-	}
-	selectedIndex = shapeIndex - 1;
-	shapesArray[selectedIndex].element.classList.add("shape--selected");
-};
-
 const findShape = (shape) => {
 	return shapesArray.indexOf(
 		shapesArray.find((shapeInArray) => shapeInArray.element === shape)
