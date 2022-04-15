@@ -12,10 +12,8 @@ const colorArray = [
 	"#FF00FF",
 ];
 
-const draggableArea = document.querySelector(".drawing-area");
-
 const documentListenerState = new ElementListenerState(document);
-const draggableAreaListenerState = new ElementListenerState(draggableArea);
+const draggableAreaListenerState = new ElementListenerState(document.querySelector(".drawing-area"));
 
 // Takes array of shape objects and makes a sorted copy to apply sorted z-index
 const sortShapesBySize = (arr) => {
@@ -48,7 +46,7 @@ const createNewShape = (clientX, clientY) => {
 		colorArray[colorIndex]
 	}`;
 	newShapeEl.style.zIndex = shapesArray.length + 1;
-	draggableArea.appendChild(newShapeEl);
+	draggableAreaListenerState.element.appendChild(newShapeEl);
 	// Set initial values for position of shape
 	startingCursorPosition.setX(clientX);
 	startingCursorPosition.setY(clientY);
@@ -171,7 +169,7 @@ const deleteShape = (e, selectedShape) => {
 		(e.key === "Delete" || e.key === "Backspace" || e.type === "click") &&
 		selectedShape
 	) {
-		draggableArea.removeChild(selectedShape);
+		draggableAreaListenerState.element.removeChild(selectedShape);
 		shapesArray.splice(shapesArray.findIndex(shape => shape.element === selectedShape), 1);
 		refreshSelectMode(shapesArray[shapesArray.length-1].element);
 	}
