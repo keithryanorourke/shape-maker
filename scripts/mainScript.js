@@ -2,7 +2,6 @@ const shapesArray = [];
 let borderThickness = 5;
 const startingCursorPosition = new PositionCoordinates();
 let releaseBorderButton = false;
-let mode = "draw";
 let formOfShape = "square";
 const colorArray = [
 	"#FF0000",

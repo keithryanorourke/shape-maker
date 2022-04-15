@@ -152,14 +152,12 @@ const drawMode = () => {
 	shapesArray.forEach((shape) => {
 		shape.removePrevListeners();
 	});
-	mode = "draw";
 	setModeButtonClasses(drawButton, [selectButton, moveButton]);
 	removeSelected();
 };
 
 const footer = document.querySelector("footer");
 const selectMode = () => {
-	mode = "select";
 	footer.appendChild(deleteContainer);
 	setCursorIcon("hand-index.svg");
 	const selectedShape = shapesArray[shapesArray.length - 1].element;
@@ -188,7 +186,6 @@ const moveMode = () => {
 			new ListenerObject("touchstart", touchShape),
 		]);
 	});
-	mode = "move";
 	setModeButtonClasses(moveButton, [selectButton, drawButton]);
 	removeSelected();
 };
