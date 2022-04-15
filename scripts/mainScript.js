@@ -10,6 +10,8 @@ const colorArray = [
 	"#FF00FF",
 ];
 
+const header = document.querySelector('header')
+
 const documentListenerState = new ElementListenerState(document);
 const draggableAreaListenerState = new ElementListenerState(
 	document.querySelector(".drawing-area")
@@ -49,7 +51,7 @@ const createNewShape = (clientX, clientY) => {
 	draggableAreaListenerState.element.appendChild(newShapeEl);
 	// Set initial values for position of shape
 	newShapeEl.style.left = sizeToString(clientX, "px");
-	newShapeEl.style.top = sizeToString(clientY - 80, "px");
+	newShapeEl.style.top = sizeToString(clientY - header.clientHeight, "px");
 	return newShapeEl;
 };
 

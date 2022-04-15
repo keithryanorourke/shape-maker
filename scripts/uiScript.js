@@ -128,7 +128,7 @@ const setModeButtonClasses = (activeButton, otherButtons) => {
 };
 
 const setCursorIcon = (fileName) => {
-	draggableAreaListenerState.element.style.cursor = `url(./assets/icons/${fileName}), auto`;
+	draggableAreaListenerState.element.style.cursor = `url(./assets/icons/${fileName}) 8 8, auto`;
 };
 
 const drawMode = () => {
