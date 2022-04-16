@@ -55,7 +55,6 @@ deleteContainer.appendChild(deleteButton);
 deleteButton.appendChild(deleteIcon);
 
 const releaseBorderBtn = (_e, buttonState, interval) => {
-	console.log("RELEASE");
 	clearInterval(interval);
 	buttonState.removeListenerType("mouseup");
 };
@@ -222,6 +221,7 @@ const refreshSelectMode = (selectedShape) => {
 		return;
 	}
 	selectedShape.classList.add("shape--selected");
+	selectedShape.style.zIndex = shapesArray.length + 1;
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
 			new ListenerObject("click", shapeClickHandler, [selectedShape]),
