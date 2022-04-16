@@ -138,13 +138,16 @@ body {
 
 	&:hover {
 		opacity: 0.8;
+		background-color: #19191977;
 	}
 
 	&--selected {
 		opacity: 1;
+		background-color: #191919bb;
 	}
 	&--selected:hover {
 		opacity: 1;
+		background-color: #191919bb;
 	}
 }
 

@@ -10,7 +10,7 @@ const colorArray = [
 	"#FF00FF",
 ];
 
-const header = document.querySelector('header')
+const header = document.querySelector("header");
 
 const documentListenerState = new ElementListenerState(document);
 const draggableAreaListenerState = new ElementListenerState(
@@ -194,6 +194,8 @@ const deleteShape = (e, selectedShape) => {
 // MOVE MODE HANDLERS
 // Focus specific shape to move when clicked on
 const grabShape = (shapeEl, clientX, clientY) => {
+	shapeEl.classList.add("shape--selected");
+	shapeEl.style.zIndex = shapesArray.length + 1;
 	borderThickness = stringToSize(shapeEl.style.borderWidth);
 	preview.style.borderWidth = sizeToString(borderThickness, "px");
 	const cursorPosition = new PositionCoordinates(clientX, clientY);
@@ -219,7 +221,7 @@ const clickShape = (e) => {
 		])
 	);
 	draggableAreaListenerState.addListener(
-		new ListenerObject("mouseup", releaseShapeMouse)
+		new ListenerObject("mouseup", releaseShapeMouse, [shapeEl])
 	);
 };
 
@@ -244,7 +246,7 @@ const touchShape = (e) => {
 		])
 	);
 	draggableAreaListenerState.addListener(
-		new ListenerObject("touchend", releaseShapeTouch)
+		new ListenerObject("touchend", releaseShapeTouch, [shapeEl])
 	);
 };
 
@@ -288,14 +290,18 @@ const moveShapeTouch = (e, currentShapeEl, allCoordinates) => {
 	);
 };
 
-const releaseShapeMouse = (e) => {
+const releaseShapeMouse = (_e, shapeEl) => {
 	draggableAreaListenerState.removeListenerType("mousemove");
 	draggableAreaListenerState.removeListenerType("mouseup");
+	shapeEl.classList.remove("shape--selected");
+	sortShapesBySize();
 };
 
-const releaseShapeTouch = (e) => {
+const releaseShapeTouch = (_e, shapeEl) => {
 	draggableAreaListenerState.removeListenerType("touchmove");
 	draggableAreaListenerState.removeListenerType("touchend");
+	shapeEl.classList.remove("shape--selected");
+	sortShapesBySize();
 };
 
 // Function to re-index event listeners on all elements of shapesArray and reset all related index variables
