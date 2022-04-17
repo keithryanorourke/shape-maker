@@ -72,7 +72,7 @@ class ElementListenerState {
 	addListener(listener) {
 		// Return error code if listener already registered in list
 		if (this.getCurrentListeners().includes(listener)) {
-			console.warn("Provided listener is already registered in list!");
+			console.warn("Provided listener is already registered in list! addListener method aborted");
 			return -1;
 		}
 		this.element.addEventListener(listener.eventType, listener.callback);
