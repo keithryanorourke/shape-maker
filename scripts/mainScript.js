@@ -291,7 +291,6 @@ const moveShapeTouch = (e, currentShapeEl, allCoordinates) => {
 };
 
 const releaseShapeMouse = (_e, shapeEl) => {
-	console.log("RELEASE")
 	draggableAreaListenerState.removeListenerType("mousemove");
 	draggableAreaListenerState.removeListenerType("mouseup");
 	shapeEl.classList.remove("shape--selected");
@@ -299,7 +298,6 @@ const releaseShapeMouse = (_e, shapeEl) => {
 };
 
 const releaseShapeTouch = (_e, shapeEl) => {
-	console.log("RELEASE")
 	draggableAreaListenerState.removeListenerType("touchmove");
 	draggableAreaListenerState.removeListenerType("touchend");
 	shapeEl.classList.remove("shape--selected");
