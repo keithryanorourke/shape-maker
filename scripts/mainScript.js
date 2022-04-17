@@ -294,14 +294,14 @@ const releaseShapeMouse = (_e, shapeEl) => {
 	draggableAreaListenerState.removeListenerType("mousemove");
 	draggableAreaListenerState.removeListenerType("mouseup");
 	shapeEl.classList.remove("shape--selected");
-	sortShapesBySize();
+	sortShapesBySize(shapesArray);
 };
 
 const releaseShapeTouch = (_e, shapeEl) => {
 	draggableAreaListenerState.removeListenerType("touchmove");
 	draggableAreaListenerState.removeListenerType("touchend");
 	shapeEl.classList.remove("shape--selected");
-	sortShapesBySize();
+	sortShapesBySize(shapesArray);
 };
 
 // Function to re-index event listeners on all elements of shapesArray and reset all related index variables
