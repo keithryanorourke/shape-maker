@@ -160,12 +160,15 @@ body {
 }
 .shape:hover {
   opacity: 0.8;
+  background-color: rgba(25, 25, 25, 0.4666666667);
 }
 .shape--selected {
   opacity: 1;
+  background-color: rgba(25, 25, 25, 0.7333333333);
 }
 .shape--selected:hover {
   opacity: 1;
+  background-color: rgba(25, 25, 25, 0.7333333333);
 }
 
 .preview {

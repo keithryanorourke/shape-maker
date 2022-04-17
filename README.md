@@ -9,7 +9,7 @@ I hope you'll give ShapeMaker a try and enjoy the heck out of it!
 
 ## Device Support
 
-ShapeMaker currently supports both mouse controls and touch controls! It is also a responsive application designed with a mobile-first approach! Landscape orientation is currently functional, though a better approach to UI layout for landscape is a future goal for this project.
+ShapeMaker currently supports both mouse controls and touch controls! It is also a responsive application designed with a mobile-first approach!
 
 
 ## Tech Stack
@@ -21,7 +21,7 @@ ShapeMaker currently supports both mouse controls and touch controls! It is also
  - README made using [readme.so](https://readme.so) made by [Katherine Peterson](https://katherinempeterson.com/)
  - Tech Stack icons provided by [tadnpfun's skill-icons repo](https://github.com/tandpfun/skill-icons#icons-list)
  - favicon made using [Favicon Generator](https://favicon.io) made by [John Sorrentino](https://twitter.com/johnsorrentino)
- - [UI icons provided by Bootstrap's icon library](https://icons.getbootstrap.com/)
+ - UI icons provided by [Bootstrap's icon library](https://icons.getbootstrap.com/)
 
 ## Deployment
 

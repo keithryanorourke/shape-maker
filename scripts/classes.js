@@ -10,13 +10,16 @@ class ElementListenerState {
 	constructor(element, initialListeners) {
 		if (!element) {
 			console.warn(
-				"Valid DOM element was not provided, ElementListenerState object will still be created but will not function as intended. Please rewrite object declaration to include DOM element or use fixElement method with DOM element as an argument."
+				"Valid DOM element was not provided, ElementListenerState object will still be created but will not function as intended."
 			);
 		}
 		this.element = element;
 		this.currentListeners = initialListeners || [];
 	}
-
+	/**
+	 *
+	 * @returns {[]} a copy array of currentListeners
+	 */
 	getCurrentListeners() {
 		return [...this.currentListeners];
 	}
@@ -30,43 +33,35 @@ class ElementListenerState {
 		prevListeners.forEach((listener) => {
 			this.element.removeEventListener(
 				listener.eventType,
-				listener.handler
+				listener.callback
 			);
 		});
 		this.setCurrentListeners([]);
 	}
 
-	/**
-	 *
-	 * @param {*} listener
-	 * @returns {number} Error code 404 will be returned if listener is not registered, nothing will be returned if method was successful.
-	 */
-	removeListener(listener) {
-		// Begin by comparing properties of listeners in list to passed in listener to validate it's registration
-		const listenerKeys = Object.keys(listener);
-		const listenerIndex = this.currentListeners.findIndex(
-			(listenerInArr) => {
-				for (let i = 0; i < listenerKeys.length; i++) {
-					const key = listenerKeys[i];
-					if (listenerInArr[key] !== listener[key]) {
-						return false;
-					}
-				}
-				return true;
-			}
+	removeListenerType(type) {
+		const currentListeners = this.getCurrentListeners();
+		const listenersToRemove = currentListeners.filter(
+			(listener) => listener.eventType === type
 		);
-		// Return error code if passed in listener is not registered with list
-		if (listenerIndex === -1) {
+		if (!listenersToRemove.length)
 			console.warn(
-				`Listener to be removed is not currently registered in list! The listener cannot be removed. \n${listener.eventType}`
+				`No listeners with type ${type} found.`,
+				currentListeners
 			);
-			return 404;
-		}
-		// Remove listener from DOM element and then update registered list in state
-		this.element.removeEventListener(listener.eventType, listener.handler);
-		const splicedListeners = this.getCurrentListeners();
-		splicedListeners.splice(listenerIndex, 1);
-		this.setCurrentListeners(splicedListeners);
+		listenersToRemove.forEach((listener) => {
+			this.element.removeEventListener(
+				listener.eventType,
+				listener.callback
+			);
+			currentListeners.splice(
+				currentListeners.findIndex(
+					(listenerInArr) => listenerInArr === listener
+				),
+				1
+			);
+		});
+		this.setCurrentListeners(currentListeners);
 	}
 
 	/**
@@ -77,10 +72,10 @@ class ElementListenerState {
 	addListener(listener) {
 		// Return error code if listener already registered in list
 		if (this.getCurrentListeners().includes(listener)) {
-			console.warn("Provided listener is already registered in list!");
+			console.warn("Provided listener is already registered in list! addListener method aborted");
 			return -1;
 		}
-		this.element.addEventListener(listener.eventType, listener.handler);
+		this.element.addEventListener(listener.eventType, listener.callback);
 		const newListeners = this.getCurrentListeners();
 		newListeners.push(listener);
 		this.setCurrentListeners(newListeners);
@@ -94,32 +89,25 @@ class ElementListenerState {
 		// Remove all previous listeners for fresh start
 		this.removePrevListeners();
 		listenersToAdd.forEach((listener) => {
-			this.element.addEventListener(listener.eventType, listener.handler);
+			this.element.addEventListener(
+				listener.eventType,
+				listener.callback
+			);
 		});
 		this.setCurrentListeners(listenersToAdd);
 	}
+}
 
+class ListenerObject {
 	/**
 	 *
-	 * @param {object} element - DOM element to write to the ListenerState Object
-	 * @param {bool} hardFix
-	 * @returns 400 error code if method failed, nothing if method was successful.
+	 * @param {string} eventType - represents the type of event listener
+	 * @param {function} handler - callback function for event listener
+	 * @param {[]} args - Array of arguments (in proper order) for callback function, defaults to empty array
 	 */
-	fixElement(element, hardFix) {
-		if (!element) {
-			console.warn(
-				"DOM element was not provided, please provide a DOM element as the first argument for this method"
-			);
-			return 400;
-		}
-		if (!this.element || hardFix) {
-			this.element = element;
-			return;
-		}
-		console.warn(
-			"There is already a DOM element registered to this ListenerState. If you wish to overwrite said element, pass true as the second argument in this method for a hard fix."
-		);
-		return 400;
+	constructor(eventType, handler, args = []) {
+		this.eventType = eventType;
+		this.callback = (e) => handler(e, ...args);
 	}
 }
 
@@ -145,5 +133,10 @@ class PositionCoordinates {
 
 	setY(num) {
 		this.y = num;
+	}
+
+	setXandY(x, y) {
+		this.x = x;
+		this.y = y;
 	}
 }
