@@ -10,7 +10,7 @@ class ElementListenerState {
 	constructor(element, initialListeners) {
 		if (!element) {
 			console.warn(
-				"Valid DOM element was not provided, ElementListenerState object will still be created but will not function as intended. Please rewrite object declaration to include DOM element or use fixElement method with DOM element as an argument."
+				"Valid DOM element was not provided, ElementListenerState object will still be created but will not function as intended."
 			);
 		}
 		this.element = element;
@@ -44,7 +44,11 @@ class ElementListenerState {
 		const listenersToRemove = currentListeners.filter(
 			(listener) => listener.eventType === type
 		);
-		// if(!listenersToRemove.length) console.warn(`No listeners with type ${type} found.`)
+		if (!listenersToRemove.length)
+			console.warn(
+				`No listeners with type ${type} found.`,
+				currentListeners
+			);
 		listenersToRemove.forEach((listener) => {
 			this.element.removeEventListener(
 				listener.eventType,
@@ -53,7 +57,8 @@ class ElementListenerState {
 			currentListeners.splice(
 				currentListeners.findIndex(
 					(listenerInArr) => listenerInArr === listener
-				)
+				),
+				1
 			);
 		});
 		this.setCurrentListeners(currentListeners);
@@ -90,29 +95,6 @@ class ElementListenerState {
 			);
 		});
 		this.setCurrentListeners(listenersToAdd);
-	}
-
-	/**
-	 *
-	 * @param {object} element - DOM element to write to the ListenerState Object
-	 * @param {bool} hardFix
-	 * @returns 400 error code if method failed, nothing if method was successful.
-	 */
-	fixElement(element, hardFix) {
-		if (!element) {
-			console.warn(
-				"DOM element was not provided, please provide a DOM element as the first argument for this method"
-			);
-			return 400;
-		}
-		if (!this.element || hardFix) {
-			this.element = element;
-			return;
-		}
-		console.warn(
-			"There is already a DOM element registered to this ListenerState. If you wish to overwrite said element, pass true as the second argument in this method for a hard fix."
-		);
-		return 400;
 	}
 }
 
