@@ -46,7 +46,8 @@ const borderMinus = document.getElementById("borderMinus");
 const deleteContainer = document.createElement("div");
 deleteContainer.className = "controls__container";
 const deleteButton = document.createElement("button");
-deleteButton.addEventListener("click", deleteShape);
+const deleteButtonLstnrState = new ElementListenerState(deleteButton);
+// deleteButton.addEventListener("click", deleteShape);
 deleteButton.className = "button";
 const deleteIcon = document.createElement("img");
 deleteIcon.setAttribute("src", "./assets/icons/delete.svg");
@@ -218,15 +219,20 @@ const refreshSelectMode = (selectedShape) => {
 	]);
 	draggableAreaListenerState.removePrevListeners();
 	if (!selectedShape) {
+		deleteButtonLstnrState.removePrevListeners();
 		return;
 	}
 	selectedShape.classList.add("shape--selected");
+	sortShapesBySize(shapesArray);
 	selectedShape.style.zIndex = shapesArray.length + 1;
 	shapesArray.forEach((shape) => {
 		shape.applyModeListeners([
 			new ListenerObject("click", shapeClickHandler, [selectedShape]),
 		]);
 	});
+	deleteButtonLstnrState.applyModeListeners([
+		new ListenerObject("click", deleteShape, [selectedShape]),
+	]);
 	documentListenerState.applyModeListeners([
 		new ListenerObject("keydown", deleteShape, [selectedShape]),
 	]);
